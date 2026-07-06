@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Space+Grotesk:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-hero: "Fraunces", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-primary: #FA5903;
+  --color-brand-dark: #111111;
+  --color-brand-cream: #F8F9FB;
+  
+  --color-brand-50: #FFFFFF;
+  --color-brand-100: #EAEAEA;
+  --color-brand-500: #FA5903;
+  --color-brand-600: #EB5507;
+  --color-brand-700: #D04800;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #F8F9FB;
+    color: #555555;
+  }
+}
+
+/* Section Spacing System Tokens & Utilities */
+:root {
+  --section-pt-full: 70px;
+  --section-pb-full: 70px;
+  --section-pt-half: 35px;
+  --section-pb-half: 35px;
+  --section-px-mobile: 16px;
+  --section-px-tablet: 24px;
+  --section-px-desktop: 32px;
+}
+
+/* Horizontal Padding Utility for consistency */
+.section-container-padding {
+  padding-left: var(--section-px-mobile);
+  padding-right: var(--section-px-mobile);
+}
+
+@media (min-width: 640px) {
+  .section-container-padding {
+    padding-left: var(--section-px-tablet);
+    padding-right: var(--section-px-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container-padding {
+    padding-left: var(--section-px-desktop);
+    padding-right: var(--section-px-desktop);
+  }
+}
+
+/* Spacing layout utilities */
+.section-spacing-hero {
+  padding-top: 112px; /* 28rem offset to clear fixed navbar */
+  padding-bottom: var(--section-pb-half);
+}
+
+.section-spacing-same-bg-middle {
+  padding-top: var(--section-pt-half);
+  padding-bottom: var(--section-pb-half);
+}
+
+.section-spacing-same-bg-last {
+  padding-top: var(--section-pt-half);
+  padding-bottom: var(--section-pb-full);
+}
+
+.section-spacing-different-bg {
+  padding-top: var(--section-pt-full);
+  padding-bottom: var(--section-pb-full);
+}
+
+/* Custom visual styles from the premium UI draft */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.marker-pulse::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgba(250, 89, 3, 0.35); /* customized to ZopiqNow primary color #FA5903 */
+  animation: marker-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes marker-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  75%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.float-y {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+}
+
+.marquee-content {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2rem;
+  padding: 0 1rem;
+  animation: marquee-animation 28s linear infinite;
+}
+
+@keyframes marquee-animation {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+

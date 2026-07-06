@@ -1,0 +1,6 @@
+{
+  "name": "ZopiqNow",
+  "description": "A premium, conversion-focused landing page for ZopiqNow, a modern food delivery platform. Features responsive pre-registration forms and an interactive data explorer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
