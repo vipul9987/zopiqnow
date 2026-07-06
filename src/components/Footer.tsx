@@ -40,7 +40,7 @@ export default function Footer() {
               ZopiqNow is an upcoming, next-generation food delivery ecosystem. We connect foodies with local artisanal kitchens in record time at flat, transparent pricing.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl bg-[#111111] border border-[#EAEAEA]/15 flex items-center justify-center text-[#555555] hover:text-white hover:border-[#FA5903]/40 transition-all">
+              <a href="https://www.instagram.com/zopiqnow/" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl bg-[#111111] border border-[#EAEAEA]/15 flex items-center justify-center text-[#555555] hover:text-white hover:border-[#FA5903]/40 transition-all">
                 <Instagram className="w-4 h-4" />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl bg-[#111111] border border-[#EAEAEA]/15 flex items-center justify-center text-[#555555] hover:text-white hover:border-[#FA5903]/40 transition-all">
@@ -123,15 +123,15 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-6 justify-center sm:justify-start">
             <div className="flex items-center space-x-1.5">
               <Mail className="w-3.5 h-3.5 text-[#555555]" />
-              <span>onboarding@zopiqnow.com</span>
+              <span>zopiqnow@gmail.com</span>
             </div>
             <div className="flex items-center space-x-1.5">
               <MapPin className="w-3.5 h-3.5 text-[#555555]" />
-              <span>San Francisco Headquarters, CA</span>
+              <span>F1, Bhagawati Complex, Vejalpur, Ahmedabad, Gujarat 380051</span>
             </div>
           </div>
           <p className="text-center sm:text-right">
-            © {new Date().getFullYear()} ZopiqNow Inc. All rights reserved. Designed for Food Deliveries, Reimagined.
+            © 2026 ZopiqNow Inc. All rights reserved.
           </p>
         </div>
 

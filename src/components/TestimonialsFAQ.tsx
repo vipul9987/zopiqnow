@@ -98,7 +98,7 @@ export default function TestimonialsFAQ() {
               Frequently Asked Questions.
             </h2>
             <p className="text-[#555555] text-xs sm:text-sm">
-              Can't find the answer you are looking for? Send us an email at <span className="text-[#FA5903] font-semibold">onboarding@zopiqnow.com</span>.
+              Can't find the answer you are looking for? Send us an email at <span className="text-[#FA5903] font-semibold">zopiqnow@gmail.com</span>.
             </p>
 
             {/* Category Filter Pills */}

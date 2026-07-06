@@ -156,16 +156,14 @@ export default function Hero({ onCtaClick }: HeroProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#555555] font-semibold"
+          className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-[#555555] font-semibold"
         >
           <span className="inline-flex items-center gap-1.5">
             <span className="text-emerald-600 font-bold">✓</span> 4.9 average rating
           </span>
-          <span className="hidden sm:inline text-[#EAEAEA]">•</span>
           <span className="inline-flex items-center gap-1.5">
             <span>🛡</span> Insulated, climate-controlled bags
           </span>
-          <span className="hidden sm:inline text-[#EAEAEA]">•</span>
           <span className="inline-flex items-center gap-1.5">
             <span>🕒</span> Live ETA, updated every 10s
           </span>

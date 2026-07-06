@@ -33,7 +33,7 @@ export default function App() {
       <div className="absolute top-[-100px] left-[-100px] w-[500px] h-[500px] bg-orange-200/30 rounded-full blur-[100px] pointer-events-none z-0"></div>
       <div className="absolute top-[20%] right-[-100px] w-[600px] h-[600px] bg-rose-200/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute top-[55%] left-[-200px] w-[700px] h-[700px] bg-orange-100/40 rounded-full blur-[130px] pointer-events-none z-0"></div>
-      <div className="absolute bottom-[-100px] right-[-100px] w-[600px] h-[600px] bg-rose-200/30 rounded-full blur-[110px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-rose-200/20 rounded-full blur-[110px] pointer-events-none z-0"></div>
 
       {/* 1. Glassmorphic Header / Navbar */}
       <Navbar
