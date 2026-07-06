@@ -13,8 +13,15 @@ export function getSheetsClient() {
       );
     }
 
-    // Fix escaped newlines in private key
-    const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
+    // Clean up private key to handle common pasting mistakes (e.g. nested quotes)
+    let formattedPrivateKey = privateKey.trim();
+    while (
+      (formattedPrivateKey.startsWith('"') && formattedPrivateKey.endsWith('"')) ||
+      (formattedPrivateKey.startsWith("'") && formattedPrivateKey.endsWith("'"))
+    ) {
+      formattedPrivateKey = formattedPrivateKey.slice(1, -1).trim();
+    }
+    formattedPrivateKey = formattedPrivateKey.replace(/\\n/g, "\n");
 
     const auth = new google.auth.JWT({
       email: clientEmail,
