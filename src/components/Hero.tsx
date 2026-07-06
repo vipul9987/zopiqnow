@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Star, Clock, Shield, Sparkles } from "lucide-react";
 
 interface HeroProps {
-  onCtaClick: (type: "customer" | "restaurant") => void;
+  onCtaClick: () => void;
 }
 
 export default function Hero({ onCtaClick }: HeroProps) {
@@ -136,10 +136,10 @@ export default function Hero({ onCtaClick }: HeroProps) {
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto"
         >
           <button
-            onClick={() => onCtaClick("customer")}
+            onClick={onCtaClick}
             className="whitespace-nowrap w-full sm:w-auto px-6 py-4 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-black text-sm sm:text-base shadow-[0_12px_30px_-10px_rgba(255,90,54,0.6)] transition-all duration-300 hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
-            <span>Order now — free first delivery</span>
+            <span>Apply for Partner Cohort</span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <button
@@ -349,10 +349,10 @@ export default function Hero({ onCtaClick }: HeroProps) {
           </div>
 
           <button 
-            onClick={() => onCtaClick("customer")}
+            onClick={onCtaClick}
             className="px-5 py-2.5 rounded-full border border-[#EAEAEA] text-[#111111] hover:bg-[#111111] hover:text-white font-extrabold text-xs transition-all duration-300 whitespace-nowrap cursor-pointer flex items-center justify-center"
           >
-            Track live
+            Become a Partner
           </button>
         </motion.div>
       </div>

@@ -1,24 +1,10 @@
-export interface CustomerRegistration {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  city: string;
-  notify: boolean;
-  timestamp: string;
-}
-
 export interface RestaurantRegistration {
   id: string;
   restaurantName: string;
-  ownerName: string;
-  email: string;
+  cityAddress: string;
   phone: string;
-  city: string;
-  cuisineType: string;
-  averageDailyOrders: string;
-  website?: string;
-  message?: string;
+  instagram?: string;
+  menu?: string;
   timestamp: string;
 }
 

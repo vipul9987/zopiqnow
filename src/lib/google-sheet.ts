@@ -8,7 +8,9 @@ export function getSheetsClient() {
     const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
     if (!clientEmail || !privateKey) {
-      throw new Error("Google Sheets API credentials (GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY) are missing in environment variables");
+      throw new Error(
+        "Google Sheets credentials are missing. Please define GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY in your Environment Variables (Settings)."
+      );
     }
 
     // Fix escaped newlines in private key
@@ -33,7 +35,7 @@ export async function appendToSheet(
   const sheets = getSheetsClient();
   const tabName = range.split("!")[0];
   
-  // Ensure spreadsheet contains this sheet title before trying to append or handle
+  // Ensure spreadsheet contains this sheet title before trying to append
   await ensureSheetExists(spreadsheetId, tabName);
 
   try {
@@ -46,7 +48,7 @@ export async function appendToSheet(
       },
     });
   } catch (error: any) {
-    console.error("Error appending to sheet:", error);
+    console.error("Error appending to Google Sheet:", error?.message || error);
     throw error;
   }
 }
@@ -54,7 +56,7 @@ export async function appendToSheet(
 export async function ensureSheetExists(spreadsheetId: string, title: string) {
   const sheets = getSheetsClient();
   
-  // Check if spreadsheet contains this sheet title
+  // Get spreadsheet structure
   const spreadsheet = await sheets.spreadsheets.get({
     spreadsheetId,
   });
@@ -81,33 +83,22 @@ export async function ensureSheetExists(spreadsheetId: string, title: string) {
     });
     
     // Add header row for the sheet
-    let headers: string[] = [];
-    if (title === "Customers") {
-      headers = ["Timestamp", "Full Name", "Email", "Phone", "City", "Notify"];
-    } else if (title === "Restaurants") {
-      headers = [
-        "Timestamp",
-        "Restaurant Name",
-        "Owner Name",
-        "Business Email",
-        "Phone",
-        "Cuisine",
-        "Average Daily Orders",
-        "Website",
-        "City",
-        "Message"
-      ];
-    }
+    const headers = [
+      "Timestamp",
+      "Restaurant Name",
+      "City & Address",
+      "Phone Number",
+      "Instagram",
+      "Menu"
+    ];
     
-    if (headers.length > 0) {
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `${title}!A1`,
-        valueInputOption: "USER_ENTERED",
-        requestBody: {
-          values: [headers],
-        },
-      });
-    }
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${title}!A1`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [headers],
+      },
+    });
   }
 }

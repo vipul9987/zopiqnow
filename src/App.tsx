@@ -10,11 +10,8 @@ import PreRegistration from "./components/PreRegistration";
 import Footer from "./components/Footer";
 
 export default function App() {
-  const [activeFormType, setActiveFormType] = useState<"customer" | "restaurant">("customer");
-
-  // 1. Scroll & Tab focus Trigger
-  const triggerPreRegisterFocus = (type: "customer" | "restaurant") => {
-    setActiveFormType(type);
+  // 1. Scroll & Focus Trigger
+  const triggerPreRegisterFocus = () => {
     const element = document.getElementById("pre-register");
     if (element) {
       const offset = 80; // height of navbar
@@ -60,9 +57,6 @@ export default function App() {
 
       {/* 8. Conversion Pre-Registration Module */}
       <PreRegistration
-        activeType={activeFormType}
-        setActiveType={setActiveFormType}
-        onCustomerRegister={() => {}}
         onRestaurantRegister={() => {}}
       />
 

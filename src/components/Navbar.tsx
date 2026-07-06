@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import ZopiqLogo from "./ZopiqLogo";
 
 interface NavbarProps {
-  onPreRegisterClick: (type: "customer" | "restaurant") => void;
+  onPreRegisterClick: () => void;
 }
 
 export default function Navbar({ onPreRegisterClick }: NavbarProps) {
@@ -34,10 +34,9 @@ export default function Navbar({ onPreRegisterClick }: NavbarProps) {
   };
 
   const menuItems = [
-    { label: "Restaurants", id: "who-can-join" },
-    { label: "Groceries", id: "features" },
+    { label: "Partnership Perks", id: "who-can-join" },
+    { label: "Features", id: "features" },
     { label: "How it works", id: "how-it-works" },
-    { label: "For riders", id: "pre-register" }
   ];
 
   return (
@@ -78,10 +77,10 @@ export default function Navbar({ onPreRegisterClick }: NavbarProps) {
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-4">
           <button
-            onClick={() => onPreRegisterClick("customer")}
+            onClick={onPreRegisterClick}
             className="px-5 py-2.5 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-sm shadow-[0_10px_30px_-10px_rgba(232,67,31,0.5)] transition duration-300 cursor-pointer transform hover:-translate-y-0.5"
           >
-            Get the app
+            Apply for Cohort
           </button>
         </div>
 
@@ -124,11 +123,11 @@ export default function Navbar({ onPreRegisterClick }: NavbarProps) {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onPreRegisterClick("customer");
+                  onPreRegisterClick();
                 }}
                 className="w-full py-2.5 rounded-full bg-[#FA5903] text-white text-xs font-bold shadow-md cursor-pointer text-center"
               >
-                Get the app
+                Apply for Cohort
               </button>
             </div>
           </motion.div>

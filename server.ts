@@ -2,13 +2,9 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
-import { validateCustomer, validateRestaurant } from "./src/lib/validation.js";
+import { validateRestaurant } from "./src/lib/validation.js";
 import { appendToSheet } from "./src/lib/google-sheet.js";
-import {
-  sendAdminNotification,
-  sendCustomerConfirmation,
-  sendRestaurantConfirmation,
-} from "./src/lib/mail.js";
+import { sendAdminNotification } from "./src/lib/mail.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,7 +22,7 @@ interface RateLimitRecord {
 }
 const rateLimits = new Map<string, RateLimitRecord>();
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const RATE_LIMIT_MAX_REQUESTS = 10; // Max 10 requests per window
+const RATE_LIMIT_MAX_REQUESTS = 20; // Max 20 registrations per window
 
 function rateLimiter(req: express.Request, res: express.Response, next: express.NextFunction) {
   const ip = (req.headers["x-forwarded-for"] as string) || req.socket.remoteAddress || "anonymous";
@@ -59,147 +55,98 @@ function rateLimiter(req: express.Request, res: express.Response, next: express.
 
 app.post("/api/register", rateLimiter, async (req, res) => {
   try {
-    const { type, honeypot, ...formData } = req.body;
+    const { honeypot, ...formData } = req.body;
 
     // Honeypot Protection for bots
     if (honeypot && honeypot.trim() !== "") {
       console.warn("Honeypot triggered. Silent ignore.");
-      // Return true to fool the spam bot
       return res.status(200).json({
         success: true,
         message: "Registration submitted successfully.",
       });
     }
 
-    if (type === "customer") {
-      const validation = validateCustomer(formData);
-      if (!validation.isValid) {
-        return res.status(400).json({
-          success: false,
-          message: "Validation failed.",
-          errors: validation.errors,
-        });
-      }
-
-      const { name, email, phone, city, notify } = validation.sanitized;
-      const timestamp = new Date().toISOString();
-
-      // 1. Store in Google Sheets
-      const sheetId = process.env.GOOGLE_SHEET_ID;
-      if (sheetId) {
-        try {
-          await appendToSheet(sheetId, "Customers!A:F", [
-            [timestamp, name, email, phone, city, notify ? "YES" : "NO"],
-          ]);
-        } catch (err) {
-          console.error("Google Sheets error (customer):", err);
-          // Don't completely fail if Google Sheets is down, but we log it
-        }
-      } else {
-        console.warn("GOOGLE_SHEET_ID is missing. Google Sheets saving skipped.");
-      }
-
-      // 2. Send emails
-      try {
-        await sendAdminNotification("customer", { name, email, phone, city });
-      } catch (err) {
-        console.error("Admin mail notification error (customer):", err);
-      }
-
-      try {
-        await sendCustomerConfirmation(email, name);
-      } catch (err) {
-        console.error("Confirmation mail error (customer):", err);
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Registration submitted successfully.",
-      });
-
-    } else if (type === "restaurant") {
-      const validation = validateRestaurant(formData);
-      if (!validation.isValid) {
-        return res.status(400).json({
-          success: false,
-          message: "Validation failed.",
-          errors: validation.errors,
-        });
-      }
-
-      const {
-        restaurantName,
-        ownerName,
-        email,
-        phone,
-        city,
-        cuisineType,
-        averageDailyOrders,
-        website,
-        message,
-      } = validation.sanitized;
-      const timestamp = new Date().toISOString();
-
-      // 1. Store in Google Sheets
-      const sheetId = process.env.GOOGLE_SHEET_ID;
-      if (sheetId) {
-        try {
-          await appendToSheet(sheetId, "Restaurants!A:J", [
-            [
-              timestamp,
-              restaurantName,
-              ownerName,
-              email,
-              phone,
-              cuisineType,
-              averageDailyOrders,
-              website,
-              city,
-              message,
-            ],
-          ]);
-        } catch (err) {
-          console.error("Google Sheets error (restaurant):", err);
-        }
-      } else {
-        console.warn("GOOGLE_SHEET_ID is missing. Google Sheets saving skipped.");
-      }
-
-      // 2. Send emails
-      try {
-        await sendAdminNotification("restaurant", {
-          restaurantName,
-          ownerName,
-          email,
-          phone,
-          cuisineType,
-          averageDailyOrders,
-          website,
-          city,
-          message,
-        });
-      } catch (err) {
-        console.error("Admin mail notification error (restaurant):", err);
-      }
-
-      try {
-        await sendRestaurantConfirmation(email, ownerName);
-      } catch (err) {
-        console.error("Confirmation mail error (restaurant):", err);
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Registration submitted successfully.",
-      });
-
-    } else {
+    const validation = validateRestaurant(formData);
+    if (!validation.isValid) {
       return res.status(400).json({
         success: false,
         message: "Validation failed.",
-        errors: { type: "Invalid registration type" },
+        errors: validation.errors,
       });
     }
+
+    const {
+      restaurantName,
+      cityAddress,
+      phone,
+      instagram,
+      menu,
+    } = validation.sanitized;
+    const timestamp = new Date().toISOString();
+
+    let sheetsSaved = false;
+    let sheetsError = "";
+
+    // 1. Store in Google Sheets
+    const sheetId = process.env.GOOGLE_SHEET_ID;
+    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+
+    if (sheetId && clientEmail && privateKey) {
+      try {
+        await appendToSheet(sheetId, "Restaurants!A:F", [
+          [
+            timestamp,
+            restaurantName,
+            cityAddress,
+            phone,
+            instagram || "N/A",
+            menu || "N/A",
+          ],
+        ]);
+        sheetsSaved = true;
+      } catch (err: any) {
+        console.error("Google Sheets storage failure:", err);
+        sheetsError = err?.message || String(err);
+      }
+    } else {
+      const missing = [];
+      if (!sheetId) missing.push("GOOGLE_SHEET_ID");
+      if (!clientEmail) missing.push("GOOGLE_CLIENT_EMAIL");
+      if (!privateKey) missing.push("GOOGLE_PRIVATE_KEY");
+      sheetsError = `Missing environment variables: ${missing.join(", ")}`;
+      console.warn("Google Sheets saving skipped. " + sheetsError);
+    }
+
+    // 2. Send email notification to Admin
+    try {
+      await sendAdminNotification({
+        restaurantName,
+        cityAddress,
+        phone,
+        instagram,
+        menu,
+      });
+    } catch (err) {
+      console.error("Admin mail notification error:", err);
+    }
+
+    // If Google Sheets configuration is missing or incorrect, we return an active alert to let the user know,
+    // while keeping the registration success on the frontend.
+    if (!sheetsSaved) {
+      return res.status(200).json({
+        success: true,
+        message: "Details received, but Google Sheets configuration is pending.",
+        sheetsConfigured: false,
+        sheetsError,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Registration submitted successfully.",
+      sheetsConfigured: true,
+    });
 
   } catch (error: any) {
     console.error("Server registration error:", error);
