@@ -211,6 +211,15 @@ export default function PreRegistration({
   const [restSuccess, setRestSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [honeypot, setHoneypot] = useState("");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 4500);
+  };
 
   // Character Animation States
   const [mouseX, setMouseX] = useState<number>(0);
@@ -302,8 +311,10 @@ export default function PreRegistration({
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePhone = (phone: string) => /^\+?[0-9\s-]{8,15}$/.test(phone);
 
-  const handleCustomerSubmit = (e: FormEvent) => {
+  const handleCustomerSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const newErrors: Record<string, string> = {};
 
     if (!custName.trim()) newErrors.custName = "Name is required";
@@ -320,27 +331,60 @@ export default function PreRegistration({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      showToast("Please correct the errors on the form.", "error");
       return;
     }
 
     setErrors({});
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      onCustomerRegister({
-        name: custName,
-        email: custEmail,
-        phone: custPhone,
-        city: custCity,
-        notify: custNotify
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "customer",
+          name: custName,
+          email: custEmail,
+          phone: custPhone,
+          city: custCity,
+          notify: custNotify,
+          honeypot,
+        }),
       });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        onCustomerRegister({
+          name: custName,
+          email: custEmail,
+          phone: custPhone,
+          city: custCity,
+          notify: custNotify,
+        });
+        setCustSuccess(true);
+        showToast("Registration successful! Welcome on board 🎉", "success");
+      } else {
+        showToast(data.message || "Registration failed.", "error");
+        if (data.errors) {
+          setErrors(data.errors);
+        }
+      }
+    } catch (err) {
+      console.error("Network error submitting customer form:", err);
+      showToast("Something went wrong. Please check your network and try again.", "error");
+    } finally {
       setIsSubmitting(false);
-      setCustSuccess(true);
-    }, 800);
+    }
   };
 
-  const handleRestaurantSubmit = (e: FormEvent) => {
+  const handleRestaurantSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const newErrors: Record<string, string> = {};
 
     if (!restName.trim()) newErrors.restName = "Restaurant Name is required";
@@ -359,27 +403,62 @@ export default function PreRegistration({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      showToast("Please correct the errors on the form.", "error");
       return;
     }
 
     setErrors({});
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      onRestaurantRegister({
-        restaurantName: restName,
-        ownerName: restOwner,
-        email: restEmail,
-        phone: restPhone,
-        city: restCity,
-        cuisineType: restCuisine,
-        averageDailyOrders: restOrders,
-        website: restWebsite,
-        message: restMessage
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "restaurant",
+          restaurantName: restName,
+          ownerName: restOwner,
+          email: restEmail,
+          phone: restPhone,
+          city: restCity,
+          cuisineType: restCuisine,
+          averageDailyOrders: restOrders,
+          website: restWebsite,
+          message: restMessage,
+          honeypot,
+        }),
       });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        onRestaurantRegister({
+          restaurantName: restName,
+          ownerName: restOwner,
+          email: restEmail,
+          phone: restPhone,
+          city: restCity,
+          cuisineType: restCuisine,
+          averageDailyOrders: restOrders,
+          website: restWebsite,
+          message: restMessage,
+        });
+        setRestSuccess(true);
+        showToast("Application submitted successfully! Our team will contact you soon 🚀", "success");
+      } else {
+        showToast(data.message || "Submission failed.", "error");
+        if (data.errors) {
+          setErrors(data.errors);
+        }
+      }
+    } catch (err) {
+      console.error("Network error submitting restaurant form:", err);
+      showToast("Something went wrong. Please check your network and try again.", "error");
+    } finally {
       setIsSubmitting(false);
-      setRestSuccess(true);
-    }, 800);
+    }
   };
 
   const resetForms = () => {
@@ -395,6 +474,7 @@ export default function PreRegistration({
     setRestCuisine("");
     setRestWebsite("");
     setRestMessage("");
+    setHoneypot("");
   };
 
   return (
@@ -766,6 +846,17 @@ export default function PreRegistration({
                     </div>
 
                     <form onSubmit={handleCustomerSubmit} className="space-y-4">
+                      {/* Honeypot field for bot spam protection */}
+                      <input
+                        type="text"
+                        name="honeypot"
+                        value={honeypot}
+                        onChange={(e) => setHoneypot(e.target.value)}
+                        className="hidden"
+                        style={{ display: "none" }}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Name Input */}
                         <div className="space-y-1">
@@ -937,6 +1028,17 @@ export default function PreRegistration({
                     </div>
 
                     <form onSubmit={handleRestaurantSubmit} className="space-y-4">
+                      {/* Honeypot field for bot spam protection */}
+                      <input
+                        type="text"
+                        name="honeypot"
+                        value={honeypot}
+                        onChange={(e) => setHoneypot(e.target.value)}
+                        className="hidden"
+                        style={{ display: "none" }}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Restaurant Name */}
                         <div className="space-y-1">
@@ -1171,6 +1273,35 @@ export default function PreRegistration({
         </div> {/* End Forms Wrapper */}
 
       </div>
+
+      {/* Dynamic Toast Alerts */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className={`fixed bottom-6 right-6 z-50 flex items-center space-x-3 px-5 py-3.5 rounded-2xl shadow-xl border text-sm font-semibold max-w-sm ${
+              toast.type === "success"
+                ? "bg-white border-emerald-100 text-emerald-800"
+                : "bg-white border-red-100 text-red-800"
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+              toast.type === "success" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+            }`}>
+              {toast.type === "success" ? "✓" : "!"}
+            </div>
+            <span className="flex-1">{toast.message}</span>
+            <button
+              onClick={() => setToast(null)}
+              className="text-gray-400 hover:text-gray-600 cursor-pointer font-extrabold text-base"
+            >
+              ×
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
