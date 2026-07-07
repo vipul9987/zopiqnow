@@ -199,6 +199,9 @@ export default function PreRegistration({
   // Detailed debug state for domain failure triage
   const [debugInfo, setDebugInfo] = useState<DebugInfoType | null>(null);
 
+  // Google Sheets active status/errors tracking
+  const [sheetsStatus, setSheetsStatus] = useState<{ configured: boolean; error?: string } | null>(null);
+
   // Simplified Restaurant Form State
   const [restName, setRestName] = useState("");
   const [restCityAddress, setRestCityAddress] = useState("");
@@ -385,10 +388,14 @@ export default function PreRegistration({
           menu: restMenu,
         });
         setRestSuccess(true);
+        setSheetsStatus({
+          configured: data.sheetsConfigured ?? true,
+          error: data.sheetsError,
+        });
         
         if (data.sheetsConfigured === false) {
           showToast(
-            "Onboarded successfully! Note: Google Sheet configuration is missing or pending in Settings.",
+            `Onboarded successfully! Note: Sheet storage failed (${data.sheetsError || "configuration pending"}).`,
             "warning"
           );
         } else {
@@ -502,9 +509,13 @@ export default function PreRegistration({
 
       if (response.ok && data?.success) {
         setCustSuccess(true);
+        setSheetsStatus({
+          configured: data.sheetsConfigured ?? true,
+          error: data.sheetsError,
+        });
         if (data.sheetsConfigured === false) {
           showToast(
-            "Priority spot reserved! Note: Google Sheet configuration is missing or pending in Settings.",
+            `Priority spot reserved! Note: Sheet storage failed (${data.sheetsError || "configuration pending"}).`,
             "warning"
           );
         } else {
@@ -579,6 +590,7 @@ export default function PreRegistration({
     setHoneypot("");
     setRestSuccess(false);
     setCustSuccess(false);
+    setSheetsStatus(null);
     setErrors({});
   };
 
@@ -904,6 +916,27 @@ export default function PreRegistration({
                       </div>
                     </div>
 
+                    {sheetsStatus && !sheetsStatus.configured && (
+                      <div className="max-w-sm mx-auto p-4 mb-6 rounded-xl bg-amber-50 border border-amber-200 text-left text-[11px] text-[#7A5B00] space-y-1.5 leading-relaxed">
+                        <p className="font-bold text-[#8F4300] flex items-center gap-1">
+                          ⚠️ Google Sheet Sync Pending
+                        </p>
+                        <p>
+                          <strong>Error:</strong> {sheetsStatus.error || "Environment credentials not configured."}
+                        </p>
+                        <p className="text-[10px] text-gray-500">
+                          Please verify your <code>GOOGLE_SHEET_ID</code>, <code>GOOGLE_CLIENT_EMAIL</code>, and <code>GOOGLE_PRIVATE_KEY</code>. Make sure the spreadsheet is shared with Editor access to your Client Email.
+                        </p>
+                      </div>
+                    )}
+
+                    {sheetsStatus && sheetsStatus.configured && (
+                      <div className="max-w-sm mx-auto p-3.5 mb-6 rounded-xl bg-emerald-50 border border-emerald-100 text-left text-[11px] text-emerald-800 flex items-center gap-2">
+                        <span className="text-emerald-600 font-bold text-sm">✓</span>
+                        <span className="font-medium text-emerald-900">Successfully synced directly to your Google Sheet!</span>
+                      </div>
+                    )}
+
                     <button
                       onClick={resetForms}
                       className="px-6 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-600 hover:text-[#1A1A1A] transition-all cursor-pointer shadow-sm"
@@ -953,6 +986,27 @@ export default function PreRegistration({
                         </div>
                       </div>
                     </div>
+
+                    {sheetsStatus && !sheetsStatus.configured && (
+                      <div className="max-w-sm mx-auto p-4 mb-6 rounded-xl bg-amber-50 border border-amber-200 text-left text-[11px] text-[#7A5B00] space-y-1.5 leading-relaxed">
+                        <p className="font-bold text-[#8F4300] flex items-center gap-1">
+                          ⚠️ Google Sheet Sync Pending
+                        </p>
+                        <p>
+                          <strong>Error:</strong> {sheetsStatus.error || "Environment credentials not configured."}
+                        </p>
+                        <p className="text-[10px] text-gray-500">
+                          Please verify your <code>GOOGLE_SHEET_ID</code>, <code>GOOGLE_CLIENT_EMAIL</code>, and <code>GOOGLE_PRIVATE_KEY</code>. Make sure the spreadsheet is shared with Editor access to your Client Email.
+                        </p>
+                      </div>
+                    )}
+
+                    {sheetsStatus && sheetsStatus.configured && (
+                      <div className="max-w-sm mx-auto p-3.5 mb-6 rounded-xl bg-emerald-50 border border-emerald-100 text-left text-[11px] text-emerald-800 flex items-center gap-2">
+                        <span className="text-emerald-600 font-bold text-sm">✓</span>
+                        <span className="font-medium text-emerald-900">Successfully synced directly to your Google Sheet!</span>
+                      </div>
+                    )}
 
                     <button
                       onClick={resetForms}

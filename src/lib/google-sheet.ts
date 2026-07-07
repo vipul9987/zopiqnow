@@ -89,15 +89,23 @@ export async function ensureSheetExists(spreadsheetId: string, title: string) {
       },
     });
     
-    // Add header row for the sheet
-    const headers = [
-      "Timestamp",
-      "Restaurant Name",
-      "City & Address",
-      "Phone Number",
-      "Instagram",
-      "Menu"
-    ];
+    // Add header row for the sheet depending on sheet name
+    const headers = title === "Customers"
+      ? [
+          "Timestamp",
+          "Name",
+          "Email",
+          "City & Address",
+          "Favorite Cuisine"
+        ]
+      : [
+          "Timestamp",
+          "Restaurant Name",
+          "City & Address",
+          "Phone Number",
+          "Instagram",
+          "Menu"
+        ];
     
     await sheets.spreadsheets.values.update({
       spreadsheetId,
