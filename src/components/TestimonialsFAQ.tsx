@@ -7,7 +7,7 @@ export default function TestimonialsFAQ() {
   const [openFaq, setOpenFaq] = useState<string | null>("faq1");
   const [faqFilter, setFaqFilter] = useState<string>("All");
 
-  const categories = ["All", "General", "Customers", "Restaurants", "Couriers"];
+  const categories = ["All", "General", "Eligibility", "Onboarding", "Visibility"];
 
   const filteredFaqs = faqFilter === "All" 
     ? faqs 
@@ -35,7 +35,7 @@ export default function TestimonialsFAQ() {
               Voices of our Community
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-[#111111] mt-4 leading-none">
-              Loved by Kitchens & Diners Alike.
+              Trusted by Local Food Partners.
             </h2>
           </div>
 

@@ -1,6 +1,6 @@
 import { 
-  Zap, Navigation, Sparkles, LayoutDashboard, 
-  BarChart3, Calendar, CreditCard, Gift, AlertCircle 
+  Zap, Sparkles, LayoutDashboard, BarChart3, CreditCard, 
+  AlertCircle, Clock, DollarSign, Headphones
 } from "lucide-react";
 import { motion } from "motion/react";
 import { features } from "../data";
@@ -9,13 +9,13 @@ import { features } from "../data";
 const getFeatureIcon = (name: string, className: string) => {
   switch (name) {
     case "Zap": return <Zap className={className} />;
-    case "Navigation": return <Navigation className={className} />;
     case "Sparkles": return <Sparkles className={className} />;
     case "LayoutDashboard": return <LayoutDashboard className={className} />;
     case "BarChart3": return <BarChart3 className={className} />;
-    case "Calendar": return <Calendar className={className} />;
     case "CreditCard": return <CreditCard className={className} />;
-    case "Gift": return <Gift className={className} />;
+    case "Clock": return <Clock className={className} />;
+    case "DollarSign": return <DollarSign className={className} />;
+    case "Headphones": return <Headphones className={className} />;
     default: return <AlertCircle className={className} />;
   }
 };
@@ -31,13 +31,13 @@ export default function Features() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <span className="text-xs font-bold tracking-widest text-[#FA5903] uppercase font-mono bg-[#FA5903]/5 px-3 py-1.5 rounded-full border border-[#FA5903]/20">
-            Platform Capabilities
+            Exclusive Benefits
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-4 mb-6 leading-none">
-            Built for Peak Performance.
+            Built for Your Restaurant's Growth.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            We are assembling a modern delivery infrastructure engineered to protect restaurant profits, enhance dispatch speeds, and delight early diners.
+            We are assembling a modern commerce platform engineered to protect restaurant profits, enhance operations, and support local launch partners.
           </p>
         </div>
 
@@ -82,10 +82,10 @@ export default function Features() {
         >
           <div className="max-w-xl text-left">
             <h3 className="text-2xl font-bold font-display text-[#111111] mb-3">
-              Ready for the next era of delivery?
+              Ready for the next era of local delivery?
             </h3>
             <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
-              We are finalizing our platform integrations, pilot fleet schedules, and payment gateways. Join the pre-registration cohort today to secure early access and exclusive launch credits.
+              We are finalizing our platform integrations, regional fleet routes, and merchant portal setups. Join our pre-registration cohort today to lock in your introductory commission and secure prime launch placement.
             </p>
           </div>
           <div className="flex items-center gap-[15px] shrink-0 flex-wrap">
@@ -94,8 +94,8 @@ export default function Features() {
               <p className="text-[10px] uppercase font-bold text-[#555555] tracking-wider">Commission</p>
             </div>
             <div className="bg-[#FFFFFF] border border-[#EAEAEA]/60 p-4 rounded-[15px] text-center w-28 sm:w-32 shadow-xs">
-              <p className="text-2xl sm:text-3xl font-extrabold text-[#FA5903] font-display">&lt;25m</p>
-              <p className="text-[10px] uppercase font-bold text-[#555555] tracking-wider">Avg Speed</p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-[#FA5903] font-display">24h</p>
+              <p className="text-[10px] uppercase font-bold text-[#555555] tracking-wider">Onboarding</p>
             </div>
             <div className="bg-[#FFFFFF] border border-[#EAEAEA]/60 p-4 rounded-[15px] text-center w-28 sm:w-32 shadow-xs">
               <p className="text-2xl sm:text-3xl font-extrabold text-[#FA5903] font-display">$0</p>

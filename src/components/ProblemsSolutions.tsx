@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { 
   Clock, DollarSign, MessageSquare, Utensils, TrendingDown, 
   EyeOff, ShieldAlert, BarChart3, Zap, ShieldCheck, 
-  Sparkles, TrendingUp, Headphones, AlertCircle, ArrowRight 
+  Sparkles, TrendingUp, Headphones, AlertCircle
 } from "lucide-react";
 import { motion } from "motion/react";
-import { customerProblems, restaurantProblems, solutions } from "../data";
+import { restaurantProblems, solutions } from "../data";
 
 // Icon mapping helper
 const getIconComponent = (name: string, className: string) => {
@@ -28,8 +27,6 @@ const getIconComponent = (name: string, className: string) => {
 };
 
 export default function ProblemsSolutions() {
-  const [activeTab, setActiveTab] = useState<"customers" | "restaurants">("customers");
-
   return (
     <div className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 py-20 sm:py-24 md:py-28">
       {/* Decorative Blur Backgrounds */}
@@ -45,37 +42,13 @@ export default function ProblemsSolutions() {
             The Food Delivery System is <span className="text-[#FA5903]">Broken</span>.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            High commission rates of up to 35% make platforms unprofitable for independent kitchens, while diners get slammed with markup fees, robot service, and lukewarm food.
+            High commission rates of up to 35% make legacy platforms unprofitable for independent kitchens, while visibility bid wars bury authentic local creators.
           </p>
-
-          {/* Tab Selector */}
-          <div className="flex items-center justify-center mt-10 p-1 bg-[#EAEAEA]/40 rounded-2xl max-w-sm mx-auto border border-[#EAEAEA]/60">
-            <button
-              onClick={() => setActiveTab("customers")}
-              className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
-                activeTab === "customers"
-                  ? "bg-[#FFFFFF] text-[#FA5903] shadow-sm"
-                  : "text-[#555555] hover:text-[#111111]"
-              }`}
-            >
-              For Customers
-            </button>
-            <button
-              onClick={() => setActiveTab("restaurants")}
-              className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
-                activeTab === "restaurants"
-                  ? "bg-[#FFFFFF] text-[#FA5903] shadow-sm"
-                  : "text-[#555555] hover:text-[#111111]"
-              }`}
-            >
-              For Restaurants
-            </button>
-          </div>
         </div>
 
         {/* PROBLEMS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[15px] mb-24">
-          {(activeTab === "customers" ? customerProblems : restaurantProblems).map((prob, idx) => (
+          {restaurantProblems.map((prob, idx) => (
             <motion.div
               key={prob.id}
               initial={{ opacity: 0, y: 30 }}
@@ -106,10 +79,10 @@ export default function ProblemsSolutions() {
             The ZopiqNow Paradigm
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-4 mb-6 leading-none">
-            We Built a Better Way.
+            A Better Way for Your Kitchen.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            By optimizing routes, eliminating massive corporate overhead, and keeping our commission rates low, we distribute value fairly to restaurants, couriers, and you.
+            By optimizing routing, eliminating corporate bloat, and keeping our commission low, ZopiqNow builds a fair, sustainable ecosystem that works for food businesses.
           </p>
         </div>
 

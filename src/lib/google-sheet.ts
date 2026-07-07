@@ -100,11 +100,12 @@ export async function ensureSheetExists(spreadsheetId: string, title: string) {
         ]
       : [
           "Timestamp",
-          "Restaurant Name",
+          "Restaurant or Business Name",
+          "Owner or Manager Name",
           "City & Address",
           "Phone Number",
-          "Instagram",
-          "Menu"
+          "Instagram Profile",
+          "Menu Details"
         ];
     
     await sheets.spreadsheets.values.update({

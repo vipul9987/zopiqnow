@@ -1,36 +1,5 @@
 import { ProblemItem, SolutionItem, FeatureItem, Testimonial, FAQItem } from "./types";
 
-export const customerProblems: ProblemItem[] = [
-  {
-    id: "cp1",
-    title: "The Lukewarm Wait",
-    description: "Cold meals, broken delivery windows, and zero accountability. Legacy platforms treat delivery speed as a secondary concern.",
-    iconName: "Clock",
-    metrics: "Average 45+ min wait time"
-  },
-  {
-    id: "cp2",
-    title: "Aggressive Hidden Markup",
-    description: "Service charges, processing fees, platform fees, and marked-up menu prices. You often pay up to 40% extra.",
-    iconName: "DollarSign",
-    metrics: "Up to 40% hidden markups"
-  },
-  {
-    id: "cp3",
-    title: "Soulless Chatbots",
-    description: "Trapped in an infinite loop with automated support bots when your food is cold, wrong, or never arrives.",
-    iconName: "MessageSquare",
-    metrics: "85% automated chatbot loops"
-  },
-  {
-    id: "cp4",
-    title: "Algorithmic Monotony",
-    description: "National fast-food conglomerates get top billing, completely burying local culinary artisans and authentic creators.",
-    iconName: "Utensils",
-    metrics: "70% corporate bias"
-  }
-];
-
 export const restaurantProblems: ProblemItem[] = [
   {
     id: "rp1",
@@ -65,123 +34,123 @@ export const restaurantProblems: ProblemItem[] = [
 export const solutions: SolutionItem[] = [
   {
     id: "s1",
-    title: "Sub-25 Minute Deliveries",
-    description: "Hyper-local routing keeps delivery times ultra-fast. Your food arrives in thermal-sealed packaging, exactly how the chef intended.",
-    iconName: "Zap",
-    badge: "Ultra-Fast Routing"
-  },
-  {
-    id: "s2",
-    title: "100% Transparent Pricing",
-    description: "Flat, honest delivery fees. Standard menu pricing with zero hidden surcharges, zero platform fees, and zero surprises.",
-    iconName: "ShieldCheck",
-    badge: "Zero Hidden Fees"
-  },
-  {
-    id: "s3",
     title: "Partner-First 8% Commission",
-    description: "Keep 92% of your hard-earned revenue. A fair commission structure designed to support local independent businesses.",
+    description: "Keep 92% of your hard-earned revenue. A flat, transparent, and fair commission structure designed to protect local independent businesses.",
     iconName: "DollarSign",
     badge: "Saves Your Profit"
   },
   {
-    id: "s4",
-    title: "Curated Local Discovery",
-    description: "An organic matching engine that connects food lovers with authentic local culinary stars instead of commercial chains.",
+    id: "s2",
+    title: "Featured Placement at Launch",
+    description: "Be prominently featured as a premium partner on Day 1. Grow your sales instantly with our merit-based ranking system.",
     iconName: "Sparkles",
-    badge: "Authentic Discoveries"
+    badge: "Free Launch Visibility"
+  },
+  {
+    id: "s3",
+    title: "Priority Onboarding",
+    description: "Get verified and ready to launch within 24 hours. Our onboarding team handles all your menu uploads, layout design, and settings.",
+    iconName: "Clock",
+    badge: "24-Hour Active Setup"
+  },
+  {
+    id: "s4",
+    title: "Dedicated Merchant Support",
+    description: "Skip the chatbots and the queues. Get instant access to a dedicated merchant manager committed to solving your operational challenges.",
+    iconName: "Headphones",
+    badge: "Real Human Assistance"
   },
   {
     id: "s5",
-    title: "Organic Ranking Engine",
-    description: "Rankings are driven purely by diner satisfaction, proximity, and freshness—never by who paid for premium visibility.",
-    iconName: "TrendingUp",
-    badge: "Pure Meritocracy"
+    title: "Predictive Analytics & Insights",
+    description: "Anticipate high-volume slots and track daily sales metrics using simple, powerful merchant analytics built directly into your dashboard.",
+    iconName: "BarChart3",
+    badge: "Smart Operations"
   },
   {
     id: "s6",
-    title: "Local Human Dispatchers",
-    description: "Skip the bots. Get instant access to local, real-time dispatch teams dedicated to resolving issues in seconds.",
-    iconName: "Headphones",
-    badge: "Real Human Support"
+    title: "Direct Customer Relations",
+    description: "Establish a direct connection with your patrons. Own your customer analytics and launch targeted promotions to reward loyal diners.",
+    iconName: "ShieldCheck",
+    badge: "Customer Ownership"
   }
 ];
 
 export const features: FeatureItem[] = [
   {
     id: "f1",
-    title: "Thermal-Sealed Courier Network",
-    description: "Our dedicated launch fleet uses state-of-the-art insulated cargo bags to maintain perfect temperature control.",
-    iconName: "Zap",
-    badge: "Pristine Delivery"
+    title: "Priority Onboarding",
+    description: "Get private access, express account verification, and standard setup within 24 hours of onboarding initiation.",
+    iconName: "Clock",
+    badge: "Launch Benefit"
   },
   {
     id: "f2",
-    title: "Block-by-Block GPS Tracking",
-    description: "Watch your delivery journey in real-time with zero lag, providing exact-minute ETA updates.",
-    iconName: "Navigation",
-    badge: "High Fidelity"
+    title: "Lower Introductory Commission",
+    description: "Lock in an ultra-low introductory commission rate of just 8% for your first 12 months on the platform.",
+    iconName: "DollarSign",
+    badge: "Margin Protection"
   },
   {
     id: "f3",
-    title: "Curated Culinary Recommendations",
-    description: "Our localized recommendation engine maps flavor profiles to suggest dishes tailored to your taste.",
+    title: "Featured Placement at Launch",
+    description: "Secure prime real estate at the top of local feeds on Launch Day, guaranteeing high visibility when we go live.",
     iconName: "Sparkles",
-    badge: "Personalized Discovery"
+    badge: "Premium Exposure"
   },
   {
     id: "f4",
-    title: "Launch Partner Dashboard",
-    description: "A premium, lightning-fast dashboard to manage live menus, view insights, and customize launch promotions.",
-    iconName: "LayoutDashboard",
-    badge: "Partner Exclusives"
+    title: "Dedicated Merchant Support",
+    description: "Receive a dedicated, single-point-of-contact Partner Manager to guide your kitchen operations and resolve any issue.",
+    iconName: "Headphones",
+    badge: "Human Assistance"
   },
   {
     id: "f5",
-    title: "Intelligent Peak Predictions",
-    description: "Anticipate high-volume slots and order density with predictive analytics designed for smooth kitchen flow.",
-    iconName: "BarChart3",
-    badge: "Flow Optimizer"
+    title: "Co-Marketing Campaigns",
+    description: "Participate in localized digital ads, neighborhood mailers, and influencer campaigns funded entirely by ZopiqNow.",
+    iconName: "Zap",
+    badge: "Free Promotion"
   },
   {
     id: "f6",
-    title: "Scheduled Recurring Deliveries",
-    description: "Set up recurring meal routines—like a fresh, hand-tossed Cobb Salad arriving every Tuesday at 12:15 PM.",
-    iconName: "Calendar",
-    badge: "Automated Routine"
+    title: "Business Dashboard",
+    description: "A fast, intuitive, responsive dashboard to update live menus, run promotions, track drivers, and view performance metrics.",
+    iconName: "LayoutDashboard",
+    badge: "Merchant Portal"
   },
   {
     id: "f7",
-    title: "Frictionless Checkout",
-    description: "Express checkouts with support for secure digital wallets, major cards, and instant peer splitting.",
-    iconName: "CreditCard",
-    badge: "Instant Checkout"
+    title: "Real-Time Order Management",
+    description: "Efficient order acceptance, live driver tracking, kitchen flow controls, and customizable preparation buffer times.",
+    iconName: "BarChart3",
+    badge: "Kitchen Efficiency"
   },
   {
     id: "f8",
-    title: "Launch Partner Network",
-    description: "Introduce your favorite local kitchens to ZopiqNow and unlock permanent platform benefits.",
-    iconName: "Gift",
-    badge: "Partner Perks"
+    title: "Fast Payouts",
+    description: "Get cash flow when you need it. Secure next-business-day direct payouts with completely itemized electronic receipts.",
+    iconName: "CreditCard",
+    badge: "Cash Flow Booster"
   }
 ];
 
 export const testimonials: Testimonial[] = [
   {
     id: "t1",
-    quote: "Standard platforms take nearly 30% of our hard-earned revenue. ZopiqNow's flat 8% launch commission means we can protect our margins and expand our kitchen staff. It feels like a true culinary partnership.",
+    quote: "Standard platforms take nearly 30% of our hard-earned revenue. ZopiqNow's flat 8% launch commission means we can protect our margins and expand our kitchen staff. It feels like a true partnership.",
     author: "Elena Rostova",
     role: "Head Chef & Owner, Basil & Vine Bistro",
-    tag: "Launch Partner",
+    tag: "Casual Dining Partner",
     image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   },
   {
     id: "t2",
-    quote: "As part of the initial city pilot, the average delivery is incredibly quick—consistently arriving under 22 minutes. The food arrives piping hot, and knowing exactly where my delivery fee goes is a game-changer.",
+    quote: "We were highly skeptical about adding another delivery partner, but ZopiqNow's focus on merchant margins is refreshing. Lower commission means we can keep our actual menu prices online without hurting our bottom line.",
     author: "Marcus Vance",
-    role: "Early Access User",
-    tag: "Early Access Diner",
+    role: "Founder, Sweet Treats Cafe",
+    tag: "Bakery & Dessert Partner",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   },
@@ -189,8 +158,8 @@ export const testimonials: Testimonial[] = [
     id: "t3",
     quote: "ZopiqNow is exactly what our local culinary scene needs. By highlighting authentic independent eateries over national fast-food chains, it provides a premium platform for real culinary craftsmanship.",
     author: "Sienna Brooks",
-    role: "Creator of @TheSaltyBite",
-    tag: "Launch Culinary Partner",
+    role: "Owner, Spice Route Kitchen",
+    tag: "Cloud Kitchen Partner",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   }
@@ -199,50 +168,74 @@ export const testimonials: Testimonial[] = [
 export const faqs: FAQItem[] = [
   {
     id: "faq1",
-    question: "When is the official launch of ZopiqNow?",
-    answer: "ZopiqNow is currently finishing its final city pilot phase. We are officially launching in our first wave of major cities in late October 2026. Pre-registered users will secure private access invitations 2 weeks before the public launch.",
+    question: "What is ZopiqNow?",
+    answer: "ZopiqNow is a next-generation local commerce and food delivery ecosystem. We are currently building our exclusive Launch Partner network of top local food businesses to ensure a premium, high-quality, and curated selection before we open to the public.",
     category: "General"
   },
   {
     id: "faq2",
-    question: "Which cities are included in the launch?",
-    answer: "Our Wave 1 launch includes San Francisco, New York, Seattle, Austin, and Chicago. We will rapidly expand to additional metropolitan regions based on local pre-registration density.",
+    question: "When will ZopiqNow launch?",
+    answer: "ZopiqNow is scheduled for an exclusive public rollout in selected launch cities in late October 2026. Pre-registered Launch Partners will be fully set up, trained, and live on the very first day of operations.",
     category: "General"
   },
   {
     id: "faq3",
-    question: "How do we become a Launch Partner?",
-    answer: "Restaurant and cafe owners can pre-register using the 'Become a Launch Partner' form. Our dedicated launch squad will contact you within 24 hours to secure your spot, arrange free professional photography, and customize your menu.",
-    category: "Partners"
+    question: "Who can join the Launch Partner Program?",
+    answer: "We welcome all licensed local food businesses, including Restaurants, Cafes, Cloud Kitchens, Bakeries, Dessert Shops, Sweet Shops, Juice Bars, Food Courts, Mall Food Outlets, Fast Food Chains, Fine Dining Restaurants, Casual Dining Restaurants, Takeaway Restaurants, QSR Brands, Food Trucks, and Pizzerias.",
+    category: "Eligibility"
   },
   {
     id: "faq4",
-    question: "Are there any hidden fees or long-term contracts?",
-    answer: "Pre-registration is completely free. We do not require lock-in periods, registration fees, or hidden onboarding costs. We are committed to earning your partnership with every order.",
-    category: "Partners"
+    question: "Is there any registration fee?",
+    answer: "No, there is absolutely zero registration fee, setup fee, or hidden onboarding charge to join our Launch Partner Program. Pre-registering is completely risk-free.",
+    category: "Eligibility"
   },
   {
     id: "faq5",
-    question: "How does ZopiqNow offer an 8% commission rate?",
-    answer: "By deploying hyper-local routing networks and serverless dispatch algorithms, we eliminate the heavy corporate overhead of traditional platforms. We pass those structural savings back to local kitchens and couriers.",
-    category: "Partners"
+    question: "How does the verification process work?",
+    answer: "Once you submit your pre-registration, our merchant onboarding team will review your business details. We will contact you within 24 to 48 hours to confirm your eligibility and schedule a verification call.",
+    category: "Onboarding"
   },
   {
     id: "faq6",
-    question: "How do I secure early customer access?",
-    answer: "Simply pre-register on this page using the 'Get Early Access' tab. You will secure priority dispatch status, exclusive launch day offers, and your first 5 deliveries completely free when we go live.",
-    category: "Early Access"
+    question: "Can cafes and cloud kitchens join?",
+    answer: "Absolutely! Cafes, bakeries, cloud kitchens, and virtual brands are fully eligible. Our packaging guidelines and insulated courier fleet are optimized to handle coffee, fresh bakery items, and high-volume virtual orders.",
+    category: "Eligibility"
   },
   {
     id: "faq7",
-    question: "How do you support independent local delivery couriers?",
-    answer: "Our launch fleet receives industry-leading distance payouts, flexible routing routines, and comprehensive safety equipment. We believe in providing flat, honest compensation with zero platform cuts on tips.",
-    category: "Fleet"
+    question: "Can restaurants from any city register?",
+    answer: "Yes, restaurants from any city can register. We are prioritizing cities based on local merchant registration density, so signing up helps bring ZopiqNow to your city faster.",
+    category: "General"
   },
   {
     id: "faq8",
-    question: "What exclusive incentives are available for pre-registering?",
-    answer: "Early access diners get their first 5 deliveries free and priority matching. Launch partner kitchens secure a 0% commission rate for their first 30 days of operation and a featured 'First Wave Partner' badge for premium visibility.",
-    category: "Early Access"
+    question: "What happens after I submit my registration?",
+    answer: "You will immediately receive a success notification. Your details are securely saved, and our launch operations squad will review your profile. You will receive an onboarding package and a welcome email within 48 hours.",
+    category: "Onboarding"
+  },
+  {
+    id: "faq9",
+    question: "Will my restaurant receive priority listing?",
+    answer: "Yes! Early pre-registered partners are placed into our 'First Wave Partner' group, securing priority organic listing and prime real estate at the top of the feed for the critical first 30 days of launch.",
+    category: "Visibility"
+  },
+  {
+    id: "faq10",
+    question: "Will ZopiqNow contact me before launch?",
+    answer: "Yes, our team will stay in regular contact. We will schedule a physical or virtual onboarding session, deliver your tablet/merchant kit, provide free professional menu photography, and train your staff weeks before launch day.",
+    category: "Onboarding"
+  },
+  {
+    id: "faq11",
+    question: "Can I edit my information later?",
+    answer: "Yes. During our direct verification call, you can update any details including your business name, menus, addresses, bank details, and contact numbers.",
+    category: "Eligibility"
+  },
+  {
+    id: "faq12",
+    question: "How will I know when onboarding begins?",
+    answer: "You will receive regular progress updates via SMS and email. Once we schedule the launch date for your specific postal region, our launch onboarding squad will schedule your live setup.",
+    category: "Onboarding"
   }
 ];

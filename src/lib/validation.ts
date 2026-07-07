@@ -16,6 +16,7 @@ export function validatePhone(phone: string): boolean {
 
 export interface RestaurantInput {
   restaurantName: string;
+  ownerName: string;
   cityAddress: string;
   phone: string;
   instagram?: string;
@@ -67,6 +68,7 @@ export function validateRestaurant(data: Partial<RestaurantInput>) {
   const errors: Record<string, string> = {};
 
   const restaurantName = (data.restaurantName || "").trim();
+  const ownerName = (data.ownerName || "").trim();
   const cityAddress = (data.cityAddress || "").trim();
   const phone = (data.phone || "").trim();
   const instagram = (data.instagram || "").trim();
@@ -74,6 +76,10 @@ export function validateRestaurant(data: Partial<RestaurantInput>) {
 
   if (!restaurantName) {
     errors.restName = "Restaurant Name is required";
+  }
+
+  if (!ownerName) {
+    errors.restOwnerName = "Owner / Manager Name is required";
   }
 
   if (!cityAddress) {
@@ -91,6 +97,7 @@ export function validateRestaurant(data: Partial<RestaurantInput>) {
     errors,
     sanitized: {
       restaurantName: sanitizeInput(restaurantName),
+      ownerName: sanitizeInput(ownerName),
       cityAddress: sanitizeInput(cityAddress),
       phone: sanitizeInput(phone),
       instagram: sanitizeInput(instagram),

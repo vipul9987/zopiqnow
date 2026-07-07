@@ -51,6 +51,7 @@ export async function sendAdminNotification(data: any) {
       <table border="1" cellpadding="8" style="border-collapse: collapse; border-color: #EAEAEA; width: 100%; font-size: 14px; text-align: left;">
         <tr style="background-color: #F8F9FB;"><th style="width: 35%;">Field</th><th>Value</th></tr>
         <tr><td><strong>Restaurant Name</strong></td><td>${data.restaurantName}</td></tr>
+        <tr><td><strong>Owner / Manager Name</strong></td><td>${data.ownerName || "Not provided"}</td></tr>
         <tr><td><strong>City & Address</strong></td><td>${data.cityAddress}</td></tr>
         <tr><td><strong>Phone Number</strong></td><td>${data.phone}</td></tr>
         <tr><td><strong>Instagram</strong></td><td>${data.instagram || "Not provided"}</td></tr>

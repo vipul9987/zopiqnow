@@ -30,6 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const {
       restaurantName,
+      ownerName,
       cityAddress,
       phone,
       instagram,
@@ -46,10 +47,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (sheetId && clientEmail && privateKey) {
       try {
-        await appendToSheet(sheetId, "Restaurants!A:F", [
+        await appendToSheet(sheetId, "Restaurants!A:G", [
           [
             timestamp,
             restaurantName,
+            ownerName,
             cityAddress,
             phone,
             instagram || "N/A",
@@ -73,6 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       await sendAdminNotification({
         restaurantName,
+        ownerName,
         cityAddress,
         phone,
         instagram,

@@ -1,6 +1,7 @@
 export interface RestaurantRegistration {
   id: string;
   restaurantName: string;
+  ownerName?: string;
   cityAddress: string;
   phone: string;
   instagram?: string;
