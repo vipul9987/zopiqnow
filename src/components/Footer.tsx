@@ -21,7 +21,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#111111] border-t border-[#EAEAEA]/15 relative overflow-hidden py-16 sm:py-20">
+    <footer className="bg-[#111111] border-t border-[#EAEAEA]/15 relative overflow-hidden pt-[70px] pb-[70px]">
       {/* Decorative Grid Accent */}
       <div className="absolute inset-0 bg-[radial-gradient(#EAEAEA_1px,transparent_1px)] [background-size:24px_24px] opacity-5 pointer-events-none" />
 

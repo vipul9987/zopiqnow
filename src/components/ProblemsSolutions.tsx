@@ -28,7 +28,7 @@ const getIconComponent = (name: string, className: string) => {
 
 export default function ProblemsSolutions() {
   return (
-    <div className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 py-20 sm:py-24 md:py-28">
+    <div className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 pt-[70px] pb-[35px]">
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-red-200/5 rounded-full blur-3xl pointer-events-none" />
 

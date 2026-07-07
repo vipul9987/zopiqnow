@@ -22,7 +22,7 @@ const getFeatureIcon = (name: string, className: string) => {
 
 export default function Features() {
   return (
-    <div id="features" className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 py-20 sm:py-24 md:py-28">
+    <div id="features" className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 pt-[35px] pb-[70px]">
       {/* Abstract Background Accents */}
       <div className="absolute top-10 right-10 w-96 h-96 bg-orange-200/5 rounded-full blur-3xl pointer-events-none" />
 

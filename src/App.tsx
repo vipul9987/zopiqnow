@@ -5,7 +5,6 @@ import ProblemsSolutions from "./components/ProblemsSolutions";
 import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
 import WhoCanJoin from "./components/WhoCanJoin";
-import TestimonialsFAQ from "./components/TestimonialsFAQ";
 import PreRegistration from "./components/PreRegistration";
 import Footer from "./components/Footer";
 
@@ -51,9 +50,6 @@ export default function App() {
 
       {/* 6. Dynamic Call-To-Action Cards */}
       <WhoCanJoin onCtaClick={triggerPreRegisterFocus} />
-
-      {/* 7. Community Testimonials & Accordion FAQ */}
-      <TestimonialsFAQ />
 
       {/* 8. Conversion Pre-Registration Module */}
       <PreRegistration

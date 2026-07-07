@@ -40,7 +40,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden bg-[#FFFFFF] py-20 sm:py-24 md:py-28 border-b border-[#EAEAEA]/60"
+      className="relative overflow-hidden bg-[#FFFFFF] pt-[35px] pb-[35px] border-b border-[#EAEAEA]/60"
     >
       {/* Decorative Grid Accent */}
       <div className="absolute inset-0 bg-[radial-gradient(#EAEAEA_1px,transparent_1px)] [background-size:24px_24px] opacity-4 pointer-events-none" />

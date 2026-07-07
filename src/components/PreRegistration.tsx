@@ -524,7 +524,7 @@ export default function PreRegistration({
   return (
     <div 
       id="pre-register" 
-      className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 z-10"
+      className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-[35px] pb-[70px] z-10"
     >
       <div className="absolute inset-0 top-12 overflow-hidden pointer-events-none rounded-[2.5rem] z-0">
         <div className="absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-orange-100/30 rounded-full blur-[120px]" />

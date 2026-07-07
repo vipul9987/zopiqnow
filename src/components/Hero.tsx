@@ -85,7 +85,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-transparent pt-32 pb-10">
+    <div className="relative overflow-hidden bg-transparent pt-32 pb-[70px]">
       {/* Ambient background decorative items */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden z-0">
         <div className="absolute top-20 left-10 w-[500px] h-[500px] rounded-full bg-[#FA5903]/5 blur-3xl" />

@@ -34,7 +34,7 @@ export default function WhoCanJoin({ onCtaClick }: WhoCanJoinProps) {
   ];
 
   return (
-    <div id="who-can-join" className="relative overflow-hidden bg-[#F8F9FB] py-20 sm:py-24 md:py-28">
+    <div id="who-can-join" className="relative overflow-hidden bg-[#F8F9FB] pt-[70px] pb-[35px]">
       {/* Background blobs */}
       <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-orange-200/5 rounded-full blur-3xl pointer-events-none" />
 
