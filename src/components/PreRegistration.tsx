@@ -188,6 +188,7 @@ export default function PreRegistration({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [honeypot, setHoneypot] = useState("");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "warning" } | null>(null);
+  const [iframeCookieWarning, setIframeCookieWarning] = useState(false);
 
   const showToast = (message: string, type: "success" | "error" | "warning" = "success") => {
     setToast({ message, type });
@@ -351,7 +352,12 @@ export default function PreRegistration({
       }
     } catch (err) {
       console.error("Network error submitting restaurant form:", err);
-      showToast("Something went wrong. Please check your network and try again.", "error");
+      if (window.self !== window.top) {
+        setIframeCookieWarning(true);
+        showToast("Secure session check blocked. Please open in a new tab.", "error");
+      } else {
+        showToast("Something went wrong. Please check your network and try again.", "error");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -782,6 +788,45 @@ export default function PreRegistration({
                           </div>
                         </div>
                       </div>
+
+                      {/* Iframe Third-Party Cookie Warning */}
+                      <AnimatePresence>
+                        {iframeCookieWarning && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="p-4 bg-amber-50 border border-amber-200/80 rounded-xl text-[#6B3F02] text-[11px] leading-relaxed space-y-3 mt-4"
+                          >
+                            <div className="flex items-start gap-2.5 text-left">
+                              <span className="text-base select-none shrink-0">⚠️</span>
+                              <div className="text-left">
+                                <p className="font-bold text-[#452802] text-xs">Secure Verification Blocked</p>
+                                <p className="text-[#6B3F02]/90 mt-0.5">
+                                  Your browser's security settings are blocking third-party cookies inside this iframe preview. Since our secure registration portal requires verification to persist entries, please open the application in a new tab to submit successfully!
+                                </p>
+                              </div>
+                            </div>
+                            <div className="pt-1 flex gap-2 justify-start">
+                              <a
+                                href={window.location.origin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FA5903] text-white font-extrabold rounded-lg text-[10px] uppercase tracking-wider hover:bg-[#EB5507] transition-all shadow-sm"
+                              >
+                                Open in New Tab ↗
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => setIframeCookieWarning(false)}
+                                className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-[#452802] font-bold rounded-lg text-[10px] uppercase tracking-wider transition-all cursor-pointer"
+                              >
+                                Dismiss
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
                       {/* Submit */}
                       <button
