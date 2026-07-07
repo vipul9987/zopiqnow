@@ -3,62 +3,62 @@ import { ProblemItem, SolutionItem, FeatureItem, Testimonial, FAQItem } from "./
 export const customerProblems: ProblemItem[] = [
   {
     id: "cp1",
-    title: "The 45+ Minute Wait",
-    description: "Cold meals, delayed dinners, and broken promises. Current delivery platforms treat speed as an afterthought.",
+    title: "The Lukewarm Wait",
+    description: "Cold meals, broken delivery windows, and zero accountability. Legacy platforms treat delivery speed as a secondary concern.",
     iconName: "Clock",
-    metrics: "Average 48m delivery time"
+    metrics: "Average 45+ min wait time"
   },
   {
     id: "cp2",
-    title: "Hidden Fees & Markups",
-    description: "Service charges, processing fees, distance surcharges, and marked-up menu prices. You pay up to 40% extra.",
+    title: "Aggressive Hidden Markup",
+    description: "Service charges, processing fees, platform fees, and marked-up menu prices. You often pay up to 40% extra.",
     iconName: "DollarSign",
-    metrics: "Up to 40% markup"
+    metrics: "Up to 40% hidden markups"
   },
   {
     id: "cp3",
-    title: "Robot Customer Support",
-    description: "Stuck in an endless chat loop with an AI bot when your food goes missing or arrives completely damaged.",
+    title: "Soulless Chatbots",
+    description: "Trapped in an infinite loop with automated support bots when your food is cold, wrong, or never arrives.",
     iconName: "MessageSquare",
-    metrics: "85% automated support"
+    metrics: "85% automated chatbot loops"
   },
   {
     id: "cp4",
-    title: "Homogeneous Selections",
-    description: "The same massive corporate fast food chains highlighted repeatedly, burying local gems and authentic eateries.",
+    title: "Algorithmic Monotony",
+    description: "National fast-food conglomerates get top billing, completely burying local culinary artisans and authentic creators.",
     iconName: "Utensils",
-    metrics: "70% corporate chains"
+    metrics: "70% corporate bias"
   }
 ];
 
 export const restaurantProblems: ProblemItem[] = [
   {
     id: "rp1",
-    title: "Crushing 30% Commissions",
-    description: "Delivery giants eat directly into your razor-thin profit margins, making delivery unprofitable for independent owners.",
+    title: "Hostile 30% Commissions",
+    description: "Legacy delivery giants consume your hard-earned margins, turning high-volume delivery into a loss leader.",
     iconName: "TrendingDown",
-    metrics: "25% - 35% commission rate"
+    metrics: "30%+ platform commission tax"
   },
   {
     id: "rp2",
-    title: "Pay-to-Play Visibility",
-    description: "Unless you spend heavily on sponsored ad placements, your restaurant remains completely invisible to local diners.",
+    title: "The Visibility Tax",
+    description: "Unless you pay massive advertising premiums, your kitchen remains completely invisible to local hungry diners.",
     iconName: "EyeOff",
-    metrics: "90% organic traffic decline"
+    metrics: "90% visibility drop for local spots"
   },
   {
     id: "rp3",
-    title: "Bureaucratic Onboarding",
-    description: "Weeks of waiting for approvals, complicated system setups, and rigid platform mandates that slow you down.",
+    title: "Frictional Onboarding",
+    description: "Weeks of waiting, convoluted dashboard systems, and rigid, unfriendly platform rules that slow down your growth.",
     iconName: "ShieldAlert",
-    metrics: "14-day average setup time"
+    metrics: "14-day average onboarding delay"
   },
   {
     id: "rp4",
-    title: "Locked Data & Analytics",
-    description: "No direct customer relationships. You receive basic summaries but never understand who your loyal diners actually are.",
+    title: "Locked Customer Data",
+    description: "No direct customer connection. You get high-level summaries, but you can never engage directly with your loyal patrons.",
     iconName: "BarChart3",
-    metrics: "Zero raw database access"
+    metrics: "Zero direct customer access"
   }
 ];
 
@@ -66,131 +66,131 @@ export const solutions: SolutionItem[] = [
   {
     id: "s1",
     title: "Sub-25 Minute Deliveries",
-    description: "Our hyper-local predictive routing algorithm ensures hot meals arrive when they taste best — straight from stove to table.",
+    description: "Hyper-local routing keeps delivery times ultra-fast. Your food arrives in thermal-sealed packaging, exactly how the chef intended.",
     iconName: "Zap",
-    badge: "Ultralight Routing"
+    badge: "Ultra-Fast Routing"
   },
   {
     id: "s2",
-    title: "Zero Hidden Fees",
-    description: "Transparent pricing. A single flat delivery rate, standard menu pricing, and zero complex processing or service markup additions.",
+    title: "100% Transparent Pricing",
+    description: "Flat, honest delivery fees. Standard menu pricing with zero hidden surcharges, zero platform fees, and zero surprises.",
     iconName: "ShieldCheck",
-    badge: "100% Transparent"
+    badge: "Zero Hidden Fees"
   },
   {
     id: "s3",
-    title: "Partner-First 8% Commissions",
-    description: "We charge a fraction of other platforms. Keep 92% of your hard-earned revenue and reinvest in your culinary craft.",
+    title: "Partner-First 8% Commission",
+    description: "Keep 92% of your hard-earned revenue. A fair commission structure designed to support local independent businesses.",
     iconName: "DollarSign",
-    badge: "Saves Profits"
+    badge: "Saves Your Profit"
   },
   {
     id: "s4",
-    title: "Predictive AI Personalization",
-    description: "Our local tasting model matches diners with their exact cravings and introduces them to curated local culinary stars.",
+    title: "Curated Local Discovery",
+    description: "An organic matching engine that connects food lovers with authentic local culinary stars instead of commercial chains.",
     iconName: "Sparkles",
-    badge: "Deep Recommender"
+    badge: "Authentic Discoveries"
   },
   {
     id: "s5",
-    title: "Democratized Organic Reach",
-    description: "Fair-play algorithm. High ratings, local proximity, and preparation speeds drive ranking, not the size of your ad budget.",
+    title: "Organic Ranking Engine",
+    description: "Rankings are driven purely by diner satisfaction, proximity, and freshness—never by who paid for premium visibility.",
     iconName: "TrendingUp",
-    badge: "Community Owned"
+    badge: "Pure Meritocracy"
   },
   {
     id: "s6",
-    title: "Co-Operative Customer Care",
-    description: "Live, human delivery operations team located locally. Speak with a real coordinator in two taps, guaranteed within 60 seconds.",
+    title: "Local Human Dispatchers",
+    description: "Skip the bots. Get instant access to local, real-time dispatch teams dedicated to resolving issues in seconds.",
     iconName: "Headphones",
-    badge: "Always Human"
+    badge: "Real Human Support"
   }
 ];
 
 export const features: FeatureItem[] = [
   {
     id: "f1",
-    title: "Lightning Fast Delivery",
-    description: "Proprietary dispatch system pairs orders immediately with thermal-insulated cargo couriers for rapid transit.",
+    title: "Thermal-Sealed Courier Network",
+    description: "Our dedicated launch fleet uses state-of-the-art insulated cargo bags to maintain perfect temperature control.",
     iconName: "Zap",
-    badge: "Hot & Fresh"
+    badge: "Pristine Delivery"
   },
   {
     id: "f2",
-    title: "Live High-Fidelity Tracking",
-    description: "Watch your food traverse block-by-block with ultra-low latency real-time telemetry and exact-minute arrivals.",
+    title: "Block-by-Block GPS Tracking",
+    description: "Watch your delivery journey in real-time with zero lag, providing exact-minute ETA updates.",
     iconName: "Navigation",
-    badge: "Real-Time"
+    badge: "High Fidelity"
   },
   {
     id: "f3",
-    title: "AI Culinary Recommendations",
-    description: "Taste-graph technology maps your favorite profiles, textures, and reviews to recommend dishes you will genuinely love.",
+    title: "Curated Culinary Recommendations",
+    description: "Our localized recommendation engine maps flavor profiles to suggest dishes tailored to your taste.",
     iconName: "Sparkles",
-    badge: "AI Powered"
+    badge: "Personalized Discovery"
   },
   {
     id: "f4",
-    title: "Exclusive Partner Dashboard",
-    description: "A gorgeous, responsive command center for owners. Manage inventory, live menus, payout metrics, and custom campaigns.",
+    title: "Launch Partner Dashboard",
+    description: "A premium, lightning-fast dashboard to manage live menus, view insights, and customize launch promotions.",
     iconName: "LayoutDashboard",
-    badge: "For Restaurants"
+    badge: "Partner Exclusives"
   },
   {
     id: "f5",
-    title: "Precision Analytics Engine",
-    description: "Track customer demographics, return rates, heatmaps of high demand, and custom peak hour predictions effortlessly.",
+    title: "Intelligent Peak Predictions",
+    description: "Anticipate high-volume slots and order density with predictive analytics designed for smooth kitchen flow.",
     iconName: "BarChart3",
-    badge: "Data Rich"
+    badge: "Flow Optimizer"
   },
   {
     id: "f6",
-    title: "Scheduled Smart Deliveries",
-    description: "Order ahead for the entire week. Set custom routines like 'Fresh salad every Tuesday at 12:15 PM' and never forget.",
+    title: "Scheduled Recurring Deliveries",
+    description: "Set up recurring meal routines—like a fresh, hand-tossed Cobb Salad arriving every Tuesday at 12:15 PM.",
     iconName: "Calendar",
-    badge: "Auto-Pilot"
+    badge: "Automated Routine"
   },
   {
     id: "f7",
-    title: "Flexible Payment Infrastructure",
-    description: "Secure, frictionless transactions with immediate payouts, split-bill groups, Apple Pay, credit cards, and crypto.",
+    title: "Frictionless Checkout",
+    description: "Express checkouts with support for secure digital wallets, major cards, and instant peer splitting.",
     iconName: "CreditCard",
-    badge: "Modern Pay"
+    badge: "Instant Checkout"
   },
   {
     id: "f8",
-    title: "Frictionless Referral Network",
-    description: "Introduce friends to ZopiqNow and earn permanent delivery credits, custom perks, and free dishes from local favorites.",
+    title: "Launch Partner Network",
+    description: "Introduce your favorite local kitchens to ZopiqNow and unlock permanent platform benefits.",
     iconName: "Gift",
-    badge: "Earn Credits"
+    badge: "Partner Perks"
   }
 ];
 
 export const testimonials: Testimonial[] = [
   {
     id: "t1",
-    quote: "Standard platforms take almost 32% of our sales. With ZopiqNow, their 8% commission rate is allowing us to hire two new kitchen staff and expand our organic menu. This is the platform restaurants have been praying for.",
+    quote: "Standard platforms take nearly 30% of our hard-earned revenue. ZopiqNow's flat 8% launch commission means we can protect our margins and expand our kitchen staff. It feels like a true culinary partnership.",
     author: "Elena Rostova",
     role: "Head Chef & Owner, Basil & Vine Bistro",
-    tag: "Restaurant Partner",
+    tag: "Launch Partner",
     image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   },
   {
     id: "t2",
-    quote: "I was lucky enough to join the ZopiqNow closed pilot. The average delivery time is shockingly fast—consistently under 22 minutes. The food arrives piping hot, and I love seeing exactly what my delivery fee covers.",
+    quote: "As part of the initial city pilot, the average delivery is incredibly quick—consistently arriving under 22 minutes. The food arrives piping hot, and knowing exactly where my delivery fee goes is a game-changer.",
     author: "Marcus Vance",
-    role: "Early Access Beta Tester",
-    tag: "Hungry Customer",
+    role: "Early Access User",
+    tag: "Early Access Diner",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   },
   {
     id: "t3",
-    quote: "As a professional food photographer and creator, platform quality is everything. ZopiqNow's focus on showcasing authentic, local, craft food creators rather than just national burger chains is a massive breath of fresh air.",
+    quote: "ZopiqNow is exactly what our local culinary scene needs. By highlighting authentic independent eateries over national fast-food chains, it provides a premium platform for real culinary craftsmanship.",
     author: "Sienna Brooks",
     role: "Creator of @TheSaltyBite",
-    tag: "Food Creator",
+    tag: "Launch Culinary Partner",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80",
     rating: 5
   }
@@ -199,50 +199,50 @@ export const testimonials: Testimonial[] = [
 export const faqs: FAQItem[] = [
   {
     id: "faq1",
-    question: "When is ZopiqNow launching?",
-    answer: "ZopiqNow is currently finishing its closed beta test. We are officially scheduled to launch in our first wave of major cities in late October 2026. Pre-registered users will receive invitations 2 weeks early with custom launch deals.",
+    question: "When is the official launch of ZopiqNow?",
+    answer: "ZopiqNow is currently finishing its final city pilot phase. We are officially launching in our first wave of major cities in late October 2026. Pre-registered users will secure private access invitations 2 weeks before the public launch.",
     category: "General"
   },
   {
     id: "faq2",
-    question: "Which cities will you launch in first?",
-    answer: "Our Initial Wave includes San Francisco, New York, Seattle, Austin, and Chicago. We plan to expand rapidly to second-tier metro regions and regional hubs based directly on the density of our customer pre-registration signups!",
+    question: "Which cities are included in the launch?",
+    answer: "Our Wave 1 launch includes San Francisco, New York, Seattle, Austin, and Chicago. We will rapidly expand to additional metropolitan regions based on local pre-registration density.",
     category: "General"
   },
   {
     id: "faq3",
-    question: "How can restaurants join the platform?",
-    answer: "Restaurants can register using the 'Partner Your Restaurant' form on this page. Our verification team will contact you within 48 hours to collect menu details, dispatch professional photography teams (completely free!), and schedule your setup.",
-    category: "Restaurants"
+    question: "How do we become a Launch Partner?",
+    answer: "Restaurant and cafe owners can pre-register using the 'Become a Launch Partner' form. Our dedicated launch squad will contact you within 24 hours to secure your spot, arrange free professional photography, and customize your menu.",
+    category: "Partners"
   },
   {
     id: "faq4",
-    question: "Is registration free and are there long-term commitments?",
-    answer: "Pre-registration and onboarding are 100% free with absolutely no signup or setup fees. There are no contracts or termination penalties—we believe in earning your partnership with every single order.",
-    category: "Restaurants"
+    question: "Are there any hidden fees or long-term contracts?",
+    answer: "Pre-registration is completely free. We do not require lock-in periods, registration fees, or hidden onboarding costs. We are committed to earning your partnership with every order.",
+    category: "Partners"
   },
   {
     id: "faq5",
-    question: "How can you charge only 8% commission when others charge 30%?",
-    answer: "We use hyper-local routing networks and serverless dispatch operations that reduce massive corporate overhead. Instead of inflating fees to fund bloated corporate hierarchies, we pass those savings back to local kitchens and couriers.",
-    category: "Restaurants"
+    question: "How does ZopiqNow offer an 8% commission rate?",
+    answer: "By deploying hyper-local routing networks and serverless dispatch algorithms, we eliminate the heavy corporate overhead of traditional platforms. We pass those structural savings back to local kitchens and couriers.",
+    category: "Partners"
   },
   {
     id: "faq6",
-    question: "Will there be delivery charges for customers?",
-    answer: "Yes, but they are flat, transparent, and go directly to rewarding your local courier. There are never any obscure service charges, platform fees, or peak-demand surge markups.",
-    category: "Customers"
+    question: "How do I secure early customer access?",
+    answer: "Simply pre-register on this page using the 'Get Early Access' tab. You will secure priority dispatch status, exclusive launch day offers, and your first 5 deliveries completely free when we go live.",
+    category: "Early Access"
   },
   {
     id: "faq7",
-    question: "Can I become a delivery partner with ZopiqNow?",
-    answer: "Absolutely! We will open our dedicated Courier Onboarding portal in August 2026. We offer industry-leading mileage payouts, flexible shift scheduling, and comprehensive health/injury protection packages.",
-    category: "Couriers"
+    question: "How do you support independent local delivery couriers?",
+    answer: "Our launch fleet receives industry-leading distance payouts, flexible routing routines, and comprehensive safety equipment. We believe in providing flat, honest compensation with zero platform cuts on tips.",
+    category: "Fleet"
   },
   {
     id: "faq8",
-    question: "What exclusive benefits do early registrants receive?",
-    answer: "Customers who pre-register today receive a 'First 5 Deliveries Free' pack, priority matching status, and access to private chef tables. Restaurants receive a 0% commission rate for their first 30 days of operation and featured listing tags.",
-    category: "Customers"
+    question: "What exclusive incentives are available for pre-registering?",
+    answer: "Early access diners get their first 5 deliveries free and priority matching. Launch partner kitchens secure a 0% commission rate for their first 30 days of operation and a featured 'First Wave Partner' badge for premium visibility.",
+    category: "Early Access"
   }
 ];

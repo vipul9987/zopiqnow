@@ -1,7 +1,7 @@
 import { useState, FormEvent, useEffect, useRef, RefObject } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
-  Utensils, Send, CheckCircle2, MapPin, Phone, Building2, Instagram, FileText 
+  Utensils, Send, CheckCircle2, MapPin, Phone, Building2, Instagram, FileText, User, Mail, Sparkles 
 } from "lucide-react";
 
 interface PupilProps {
@@ -172,18 +172,49 @@ interface PreRegistrationProps {
   }) => void;
 }
 
+interface DebugInfoType {
+  url: string;
+  method: string;
+  status?: number;
+  statusText?: string;
+  errorName?: string;
+  errorMessage?: string;
+  errorStack?: string;
+  rawResponse?: string;
+  browserEnv?: {
+    userAgent: string;
+    origin: string;
+    href: string;
+    isIframe: boolean;
+    cookiesEnabled: boolean;
+  };
+}
+
 export default function PreRegistration({
   onRestaurantRegister
 }: PreRegistrationProps) {
+  // Form mode state
+  const [activeFormTab, setActiveFormTab] = useState<"restaurants" | "customers">("restaurants");
+
+  // Detailed debug state for domain failure triage
+  const [debugInfo, setDebugInfo] = useState<DebugInfoType | null>(null);
+
   // Simplified Restaurant Form State
   const [restName, setRestName] = useState("");
   const [restCityAddress, setRestCityAddress] = useState("");
   const [restPhone, setRestPhone] = useState("");
   const [restInstagram, setRestInstagram] = useState("");
   const [restMenu, setRestMenu] = useState("");
+  const [restSuccess, setRestSuccess] = useState(false);
+
+  // Simplified Customer Form State
+  const [custName, setCustName] = useState("");
+  const [custEmail, setCustEmail] = useState("");
+  const [custCityAddress, setCustCityAddress] = useState("");
+  const [custCuisine, setCustCuisine] = useState("");
+  const [custSuccess, setCustSuccess] = useState(false);
 
   // UI States
-  const [restSuccess, setRestSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [honeypot, setHoneypot] = useState("");
@@ -284,6 +315,14 @@ export default function PreRegistration({
 
   const validatePhone = (phone: string) => /^\+?[0-9\s().-]{8,20}$/.test(phone);
 
+  const getBrowserEnv = () => ({
+    userAgent: navigator.userAgent,
+    origin: window.location.origin,
+    href: window.location.href,
+    isIframe: window.self !== window.top,
+    cookiesEnabled: navigator.cookieEnabled,
+  });
+
   const handleRestaurantSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -305,28 +344,39 @@ export default function PreRegistration({
     }
 
     setErrors({});
+    setDebugInfo(null);
     setIsSubmitting(true);
 
+    const url = "/api/register";
+    const payload = {
+      restaurantName: restName,
+      cityAddress: restCityAddress,
+      phone: restPhone,
+      instagram: restInstagram,
+      menu: restMenu,
+      honeypot,
+    };
+
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          restaurantName: restName,
-          cityAddress: restCityAddress,
-          phone: restPhone,
-          instagram: restInstagram,
-          menu: restMenu,
-          honeypot,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data: any = null;
+      let rawText = "";
+      try {
+        rawText = await response.text();
+        data = JSON.parse(rawText);
+      } catch (parseErr: any) {
+        console.error("Failed to parse response body as JSON:", parseErr);
+      }
 
-      if (response.ok && data.success) {
+      if (response.ok && data?.success) {
         onRestaurantRegister({
           restaurantName: restName,
           cityAddress: restCityAddress,
@@ -345,18 +395,169 @@ export default function PreRegistration({
           showToast("Application submitted successfully! Our team will contact you soon 🚀", "success");
         }
       } else {
-        showToast(data.message || "Submission failed.", "error");
-        if (data.errors) {
+        const errMessage = data?.message || "Submission failed.";
+        showToast(errMessage, "error");
+        if (data?.errors) {
           setErrors(data.errors);
         }
+
+        const debugData: DebugInfoType = {
+          url,
+          method: "POST",
+          status: response.status,
+          statusText: response.statusText,
+          errorName: "APIResponseError",
+          errorMessage: errMessage,
+          rawResponse: rawText || JSON.stringify(data),
+          browserEnv: getBrowserEnv(),
+        };
+        setDebugInfo(debugData);
+
+        console.error("=== SYSTEM DIAGNOSTICS: API RESPONSE FAILURE ===");
+        console.error("Request URL:", url);
+        console.error("Status Code:", response.status, response.statusText);
+        console.error("Server Payload Sent:", payload);
+        console.error("Server Response Raw:", rawText);
+        console.error("Browser Env Details:", debugData.browserEnv);
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error("=== SYSTEM DIAGNOSTICS: NETWORK / UNEXPECTED FAILURE ===");
       console.error("Network error submitting restaurant form:", err);
+      
+      const debugData: DebugInfoType = {
+        url,
+        method: "POST",
+        errorName: err?.name || "NetworkError",
+        errorMessage: err?.message || "Failed to fetch / network failure",
+        errorStack: err?.stack || "",
+        browserEnv: getBrowserEnv(),
+      };
+      setDebugInfo(debugData);
+
+      console.error("Request URL:", url);
+      console.error("Browser Env Details:", debugData.browserEnv);
+
       if (window.self !== window.top) {
         setIframeCookieWarning(true);
         showToast("Secure session check blocked. Please open in a new tab.", "error");
       } else {
-        showToast("Something went wrong. Please check your network and try again.", "error");
+        showToast(`Something went wrong: ${err?.message || "Network failure"}. Details logged to console.`, "error");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCustomerSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const newErrors: Record<string, string> = {};
+
+    if (!custName.trim()) newErrors.custName = "Name is required";
+    if (!custEmail.trim()) {
+      newErrors.custEmail = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(custEmail)) {
+      newErrors.custEmail = "Invalid email format";
+    }
+    if (!custCityAddress.trim()) newErrors.custCityAddress = "City Name & Address is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      showToast("Please correct the errors on the form.", "error");
+      return;
+    }
+
+    setErrors({});
+    setDebugInfo(null);
+    setIsSubmitting(true);
+
+    const url = "/api/register-customer";
+    const payload = {
+      name: custName,
+      email: custEmail,
+      cityAddress: custCityAddress,
+      favoriteCuisine: custCuisine,
+      honeypot,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      let data: any = null;
+      let rawText = "";
+      try {
+        rawText = await response.text();
+        data = JSON.parse(rawText);
+      } catch (parseErr: any) {
+        console.error("Failed to parse response body as JSON:", parseErr);
+      }
+
+      if (response.ok && data?.success) {
+        setCustSuccess(true);
+        if (data.sheetsConfigured === false) {
+          showToast(
+            "Priority spot reserved! Note: Google Sheet configuration is missing or pending in Settings.",
+            "warning"
+          );
+        } else {
+          showToast("Exclusive spot reserved successfully! Welcome to ZopiqNow! 🚀", "success");
+        }
+      } else {
+        const errMessage = data?.message || "Submission failed.";
+        showToast(errMessage, "error");
+        if (data?.errors) {
+          setErrors(data.errors);
+        }
+
+        const debugData: DebugInfoType = {
+          url,
+          method: "POST",
+          status: response.status,
+          statusText: response.statusText,
+          errorName: "APIResponseError",
+          errorMessage: errMessage,
+          rawResponse: rawText || JSON.stringify(data),
+          browserEnv: getBrowserEnv(),
+        };
+        setDebugInfo(debugData);
+
+        console.error("=== SYSTEM DIAGNOSTICS: CUSTOMER API RESPONSE FAILURE ===");
+        console.error("Request URL:", url);
+        console.error("Status Code:", response.status, response.statusText);
+        console.error("Server Payload Sent:", payload);
+        console.error("Server Response Raw:", rawText);
+        console.error("Browser Env Details:", debugData.browserEnv);
+      }
+    } catch (err: any) {
+      console.error("=== SYSTEM DIAGNOSTICS: CUSTOMER NETWORK / UNEXPECTED FAILURE ===");
+      console.error("Network error submitting customer form:", err);
+      
+      const debugData: DebugInfoType = {
+        url,
+        method: "POST",
+        errorName: err?.name || "NetworkError",
+        errorMessage: err?.message || "Failed to fetch / network failure",
+        errorStack: err?.stack || "",
+        browserEnv: getBrowserEnv(),
+      };
+      setDebugInfo(debugData);
+
+      console.error("Request URL:", url);
+      console.error("Browser Env Details:", debugData.browserEnv);
+
+      if (window.self !== window.top) {
+        setIframeCookieWarning(true);
+        showToast("Secure session check blocked. Please open in a new tab.", "error");
+      } else {
+        showToast(`Something went wrong: ${err?.message || "Network failure"}. Details logged to console.`, "error");
       }
     } finally {
       setIsSubmitting(false);
@@ -369,9 +570,75 @@ export default function PreRegistration({
     setRestPhone("");
     setRestInstagram("");
     setRestMenu("");
+    
+    setCustName("");
+    setCustEmail("");
+    setCustCityAddress("");
+    setCustCuisine("");
+
     setHoneypot("");
     setRestSuccess(false);
+    setCustSuccess(false);
     setErrors({});
+  };
+
+  const renderDiagnostics = () => {
+    if (!debugInfo) return null;
+    return (
+      <div className="mt-4 p-4 bg-red-50/90 border border-red-200/80 rounded-xl text-left font-sans text-xs text-red-900 shadow-xs">
+        <div className="flex items-center justify-between border-b border-red-200/50 pb-2 mb-2">
+          <span className="font-bold text-red-950 uppercase tracking-wider text-[10px] font-mono flex items-center gap-1">
+            <span className="animate-pulse text-red-600 font-bold">●</span> System Diagnostics
+          </span>
+          <button 
+            type="button" 
+            onClick={() => setDebugInfo(null)}
+            className="text-red-500 hover:text-red-700 font-bold px-1.5 py-0.5 rounded-md hover:bg-red-100 transition-all cursor-pointer font-mono text-[10px]"
+          >
+            Clear
+          </button>
+        </div>
+        <p className="font-semibold text-red-950 mb-1 leading-tight">
+          {debugInfo.errorMessage || "An unexpected network or server error occurred."}
+        </p>
+        <p className="text-[10px] text-red-800/80 mb-2 font-mono break-all leading-relaxed">
+          Failed: {debugInfo.method} {debugInfo.url} {debugInfo.status ? `(Status: ${debugInfo.status} ${debugInfo.statusText || ""})` : ""}
+        </p>
+        
+        <details className="mt-2 bg-white/70 border border-red-100/50 rounded-lg overflow-hidden">
+          <summary className="px-2.5 py-1.5 text-[10px] font-bold text-red-900 cursor-pointer select-none bg-red-100/30 hover:bg-red-100/50 transition-all">
+            View Technical Debug Details
+          </summary>
+          <div className="p-3 font-mono text-[9px] text-red-950 space-y-2 overflow-x-auto leading-normal bg-white/95 max-h-60">
+            <div>
+              <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Error Name & Message:</span>
+              <pre className="whitespace-pre-wrap font-mono mt-0.5 break-all text-red-700/90 bg-red-50/50 p-1.5 rounded border border-red-100/50">
+                {debugInfo.errorName}: {debugInfo.errorMessage}
+                {debugInfo.errorStack && `\n${debugInfo.errorStack}`}
+              </pre>
+            </div>
+            {debugInfo.rawResponse && (
+              <div>
+                <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Raw Server Response:</span>
+                <pre className="whitespace-pre-wrap font-mono mt-0.5 break-all text-red-700/90 bg-red-50/50 p-1.5 rounded border border-red-100/50">
+                  {debugInfo.rawResponse}
+                </pre>
+              </div>
+            )}
+            <div>
+              <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Browser Environment:</span>
+              <ul className="list-disc pl-3 mt-1 space-y-0.5 text-red-900/80">
+                <li><strong>User Agent:</strong> {debugInfo.browserEnv?.userAgent}</li>
+                <li><strong>Origin:</strong> {debugInfo.browserEnv?.origin}</li>
+                <li><strong>Current URL:</strong> {debugInfo.browserEnv?.href}</li>
+                <li><strong>Inside Iframe:</strong> {debugInfo.browserEnv?.isIframe ? "Yes (Cross-domain cookies might be blocked)" : "No"}</li>
+                <li><strong>Cookies Enabled:</strong> {debugInfo.browserEnv?.cookiesEnabled ? "Yes" : "No"}</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    );
   };
 
   return (
@@ -388,13 +655,13 @@ export default function PreRegistration({
         {/* Section Title */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-xs font-bold tracking-widest text-[#FA5903] uppercase font-mono bg-[#FA5903]/5 px-3 py-1.5 rounded-full border border-[#FA5903]/20">
-            Apply Now
+            Join the Launch
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight text-[#111111] mt-4 mb-5 leading-none">
-            Become a Partner.
+            Ready Before Everyone Else?
           </h2>
           <p className="text-[#555555] text-xs sm:text-sm md:text-base leading-relaxed">
-            Fill out your basic restaurant details below. Our priority onboarding squad will reach out within 24 hours to integrate your menu and POS!
+            Pre-register today and be among the first restaurants and customers to experience ZopiqNow when we launch. Select your track below to secure your spot.
           </p>
         </div>
 
@@ -590,7 +857,7 @@ export default function PreRegistration({
               <div className="absolute top-1/4 right-1/4 size-40 bg-white/10 rounded-full blur-2xl" />
             </div>
 
-            {/* Right Column: Simplified Restaurant Form / Success State */}
+            {/* Right Column: Dual Form Selector / Success States */}
             <div className="col-span-1 lg:col-span-7 flex flex-col justify-center p-6 sm:p-10">
               
               <AnimatePresence mode="wait">
@@ -644,200 +911,465 @@ export default function PreRegistration({
                       Onboard Another Kitchen
                     </button>
                   </motion.div>
+                ) : custSuccess ? (
+                  <motion.div
+                    key="customer-success"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="text-center py-6"
+                  >
+                    <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 mx-auto mb-4">
+                      <Sparkles className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-display font-extrabold text-[#111111] mb-2">
+                      Get Early Access
+                    </h3>
+                    <p className="text-[#555555] max-w-md mx-auto text-xs sm:text-sm leading-relaxed mb-6">
+                      Priority spot reserved for <span className="text-[#111111] font-semibold">{custName}</span>! We will notify you at <span className="text-[#FA5903] font-medium">{custEmail}</span> with your launch invitation.
+                    </p>
+
+                    {/* Customer Ticket Card representation */}
+                    <div className="max-w-sm mx-auto p-5 rounded-[15px] bg-gradient-to-tr from-emerald-100/10 via-white to-white/90 border border-[#EAEAEA]/60 text-left mb-6 shadow-xs relative overflow-hidden">
+                      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-100/5 rounded-full blur-2xl" />
+                      <div className="flex items-center justify-between mb-6">
+                        <div>
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 font-bold">Ticket Code</p>
+                          <h4 className="text-base font-bold font-display text-[#111111]">Early Access Pass</h4>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[9px] font-mono text-gray-400 uppercase">Benefit</p>
+                          <p className="text-sm font-extrabold text-emerald-600 font-mono">5 Free Del.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-black/5 pt-3 text-xs font-sans text-gray-500">
+                        <div>
+                          <p className="text-[9px] text-gray-400 uppercase font-mono">Status</p>
+                          <p className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-0.5 rounded-full uppercase inline-block font-sans">Active</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[9px] text-gray-400 uppercase font-mono">Launch Priority</p>
+                          <p className="text-[10px] text-[#1A1A1A] font-semibold font-display">Level 1 (Top)</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={resetForms}
+                      className="px-6 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-600 hover:text-[#1A1A1A] transition-all cursor-pointer shadow-sm"
+                    >
+                      Reserve Another Spot
+                    </button>
+                  </motion.div>
                 ) : (
                   <motion.div
-                    key="restaurant-form-container"
+                    key="pre-reg-forms-container"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="space-y-6"
                   >
-                    <div>
-                      <h4 className="text-lg font-bold text-[#111111] font-display">Restaurant Details</h4>
-                      <p className="text-xs text-gray-500 mt-0.5">Please provide basic details to lock in your 8% launch commission rate.</p>
+                    {/* Compact Inner Switcher */}
+                    <div className="flex p-1 bg-gray-100/80 rounded-xl max-w-xs border border-gray-200/50 mb-2">
+                      <button
+                        onClick={() => {
+                          setActiveFormTab("restaurants");
+                          setErrors({});
+                        }}
+                        className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+                          activeFormTab === "restaurants"
+                            ? "bg-[#FFFFFF] text-[#FA5903] shadow-xs"
+                            : "text-[#555555] hover:text-[#111111]"
+                        }`}
+                      >
+                        Restaurants
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveFormTab("customers");
+                          setErrors({});
+                        }}
+                        className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+                          activeFormTab === "customers"
+                            ? "bg-[#FFFFFF] text-[#FA5903] shadow-xs"
+                            : "text-[#555555] hover:text-[#111111]"
+                        }`}
+                      >
+                        Customers
+                      </button>
                     </div>
 
-                    <form onSubmit={handleRestaurantSubmit} className="space-y-4">
-                      {/* Honeypot field for bot spam protection */}
-                      <input
-                        type="text"
-                        name="honeypot"
-                        value={honeypot}
-                        onChange={(e) => setHoneypot(e.target.value)}
-                        className="hidden"
-                        style={{ display: "none" }}
-                        tabIndex={-1}
-                        autoComplete="off"
-                      />
-
+                    {activeFormTab === "restaurants" ? (
                       <div className="space-y-4">
-                        {/* Restaurant Name */}
-                        <div className="space-y-1">
-                          <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
-                            Restaurant Name *
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                              <Building2 className="w-4 h-4" />
-                            </div>
-                            <input
-                              type="text"
-                              required
-                              value={restName}
-                              onChange={(e) => setRestName(e.target.value)}
-                              onFocus={() => setIsTyping(true)}
-                              onBlur={() => setIsTyping(false)}
-                              placeholder="Mama Lucia's Pizzeria"
-                              className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
-                                errors.restName ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
-                              } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
-                            />
-                          </div>
-                          {errors.restName && <p className="text-[10px] text-red-500 font-bold">{errors.restName}</p>}
+                        <div>
+                          <h4 className="text-lg font-bold text-[#111111] font-display">Become a Launch Partner</h4>
+                          <p className="text-xs text-gray-500 mt-0.5">Register your restaurant today and secure priority onboarding before ZopiqNow launches in your city.</p>
                         </div>
 
-                        {/* City and Address */}
-                        <div className="space-y-1">
-                          <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
-                            City & Address *
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                              <MapPin className="w-4 h-4" />
-                            </div>
-                            <input
-                              type="text"
-                              required
-                              value={restCityAddress}
-                              onChange={(e) => setRestCityAddress(e.target.value)}
-                              onFocus={() => setIsTyping(true)}
-                              onBlur={() => setIsTyping(false)}
-                              placeholder="e.g. San Francisco - 100 Mission St"
-                              className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
-                                errors.restCityAddress ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
-                              } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
-                            />
-                          </div>
-                          {errors.restCityAddress && <p className="text-[10px] text-red-500 font-bold">{errors.restCityAddress}</p>}
-                        </div>
+                        <form onSubmit={handleRestaurantSubmit} className="space-y-4">
+                          {/* Honeypot field for bot spam protection */}
+                          <input
+                            type="text"
+                            name="honeypot"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                            className="hidden"
+                            style={{ display: "none" }}
+                            tabIndex={-1}
+                            autoComplete="off"
+                          />
 
-                        {/* Contact Phone */}
-                        <div className="space-y-1">
-                          <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
-                            Phone Number *
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                              <Phone className="w-4 h-4" />
+                          <div className="space-y-4 text-left">
+                            {/* Restaurant Name */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Restaurant Name *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <Building2 className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  required
+                                  value={restName}
+                                  onChange={(e) => setRestName(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="Mama Lucia's Pizzeria"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.restName ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.restName && <p className="text-[10px] text-red-500 font-bold">{errors.restName}</p>}
                             </div>
-                            <input
-                              type="tel"
-                              required
-                              value={restPhone}
-                              onChange={(e) => setRestPhone(e.target.value)}
-                              onFocus={() => setIsTyping(true)}
-                              onBlur={() => setIsTyping(false)}
-                              placeholder="+1 (555) 123-4567"
-                              className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
-                                errors.restPhone ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
-                              } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
-                            />
-                          </div>
-                          {errors.restPhone && <p className="text-[10px] text-red-500 font-bold">{errors.restPhone}</p>}
-                        </div>
 
-                        {/* Instagram (Optional) */}
-                        <div className="space-y-1">
-                          <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
-                            Instagram Link (Optional)
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                              <Instagram className="w-4 h-4" />
+                            {/* City and Address */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                City & Address *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <MapPin className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  required
+                                  value={restCityAddress}
+                                  onChange={(e) => setRestCityAddress(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="e.g. San Francisco - 100 Mission St"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.restCityAddress ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.restCityAddress && <p className="text-[10px] text-red-500 font-bold">{errors.restCityAddress}</p>}
                             </div>
-                            <input
-                              type="text"
-                              value={restInstagram}
-                              onChange={(e) => setRestInstagram(e.target.value)}
-                              onFocus={() => setIsTyping(true)}
-                              onBlur={() => setIsTyping(false)}
-                              placeholder="e.g. @mamalucias_pizzeria"
-                              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAEAEA]/60 focus:border-[#FA5903]/50 text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs"
-                            />
-                          </div>
-                        </div>
 
-                        {/* Menu Link / Details (Optional) */}
-                        <div className="space-y-1">
-                          <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
-                            Menu Link or Details (Optional)
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                              <FileText className="w-4 h-4" />
+                            {/* Contact Phone */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Phone Number *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <Phone className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="tel"
+                                  required
+                                  value={restPhone}
+                                  onChange={(e) => setRestPhone(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="+1 (555) 123-4567"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.restPhone ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.restPhone && <p className="text-[10px] text-red-500 font-bold">{errors.restPhone}</p>}
                             </div>
-                            <input
-                              type="text"
-                              value={restMenu}
-                              onChange={(e) => setRestMenu(e.target.value)}
-                              onFocus={() => setIsTyping(true)}
-                              onBlur={() => setIsTyping(false)}
-                              placeholder="e.g. https://mamalucia.com/menu or Pizza/Pasta specialty"
-                              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAEAEA]/60 focus:border-[#FA5903]/50 text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs"
-                            />
-                          </div>
-                        </div>
-                      </div>
 
-                      {/* Iframe Third-Party Cookie Warning */}
-                      <AnimatePresence>
-                        {iframeCookieWarning && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="p-4 bg-amber-50 border border-amber-200/80 rounded-xl text-[#6B3F02] text-[11px] leading-relaxed space-y-3 mt-4"
-                          >
-                            <div className="flex items-start gap-2.5 text-left">
-                              <span className="text-base select-none shrink-0">⚠️</span>
-                              <div className="text-left">
-                                <p className="font-bold text-[#452802] text-xs">Secure Verification Blocked</p>
-                                <p className="text-[#6B3F02]/90 mt-0.5">
-                                  Your browser's security settings are blocking third-party cookies inside this iframe preview. Since our secure registration portal requires verification to persist entries, please open the application in a new tab to submit successfully!
-                                </p>
+                            {/* Instagram (Optional) */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Instagram Link (Optional)
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <Instagram className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={restInstagram}
+                                  onChange={(e) => setRestInstagram(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="e.g. @mamalucias_pizzeria"
+                                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAEAEA]/60 focus:border-[#FA5903]/50 text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs"
+                                />
                               </div>
                             </div>
-                            <div className="pt-1 flex gap-2 justify-start">
-                              <a
-                                href={window.location.origin}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FA5903] text-white font-extrabold rounded-lg text-[10px] uppercase tracking-wider hover:bg-[#EB5507] transition-all shadow-sm"
-                              >
-                                Open in New Tab ↗
-                              </a>
-                              <button
-                                type="button"
-                                onClick={() => setIframeCookieWarning(false)}
-                                className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-[#452802] font-bold rounded-lg text-[10px] uppercase tracking-wider transition-all cursor-pointer"
-                              >
-                                Dismiss
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
 
-                      {/* Submit */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full flex items-center justify-center space-x-2 py-3 mt-4 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-sm transition-all duration-300 shadow-md shadow-orange-950/10 hover:shadow-orange-950/20 cursor-pointer disabled:opacity-50"
-                      >
-                        <Send className="w-4 h-4" />
-                        <span>{isSubmitting ? "Processing..." : "Submit Application"}</span>
-                      </button>
-                    </form>
+                            {/* Menu Link / Details (Optional) */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Menu Link or Details (Optional)
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <FileText className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={restMenu}
+                                  onChange={(e) => setRestMenu(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="e.g. https://mamalucia.com/menu or Pizza/Pasta specialty"
+                                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAEAEA]/60 focus:border-[#FA5903]/50 text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Iframe Third-Party Cookie Warning */}
+                          <AnimatePresence>
+                            {iframeCookieWarning && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="p-4 bg-amber-50 border border-amber-200/80 rounded-xl text-[#6B3F02] text-[11px] leading-relaxed space-y-3 mt-4"
+                              >
+                                <div className="flex items-start gap-2.5 text-left">
+                                  <span className="text-base select-none shrink-0">⚠️</span>
+                                  <div className="text-left">
+                                    <p className="font-bold text-[#452802] text-xs">Secure Verification Blocked</p>
+                                    <p className="text-[#6B3F02]/90 mt-0.5">
+                                      Your browser's security settings are blocking third-party cookies inside this iframe preview. Since our secure registration portal requires verification to persist entries, please open the application in a new tab to submit successfully!
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="pt-1 flex gap-2 justify-start">
+                                  <a
+                                    href={window.location.origin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FA5903] text-white font-extrabold rounded-lg text-[10px] uppercase tracking-wider hover:bg-[#EB5507] transition-all shadow-sm"
+                                  >
+                                    Open in New Tab ↗
+                                  </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => setIframeCookieWarning(false)}
+                                    className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-[#452802] font-bold rounded-lg text-[10px] uppercase tracking-wider transition-all cursor-pointer"
+                                  >
+                                    Dismiss
+                                  </button>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+
+                          {renderDiagnostics()}
+
+                          {/* Submit */}
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full flex items-center justify-center space-x-2 py-3 mt-4 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-sm transition-all duration-300 shadow-md shadow-orange-950/10 hover:shadow-orange-950/20 cursor-pointer disabled:opacity-50"
+                          >
+                            <Send className="w-4 h-4" />
+                            <span>{isSubmitting ? "Processing..." : "Become a Launch Partner"}</span>
+                          </button>
+                        </form>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-lg font-bold text-[#111111] font-display">Join Before We Launch</h4>
+                          <p className="text-xs text-gray-500 mt-0.5">Sign up today to receive launch updates, exclusive offers, and priority access when ZopiqNow arrives in your city.</p>
+                        </div>
+
+                        <form onSubmit={handleCustomerSubmit} className="space-y-4">
+                          {/* Honeypot field for bot spam protection */}
+                          <input
+                            type="text"
+                            name="honeypot"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                            className="hidden"
+                            style={{ display: "none" }}
+                            tabIndex={-1}
+                            autoComplete="off"
+                          />
+
+                          <div className="space-y-4 text-left">
+                            {/* Customer Name */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Full Name *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <User className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  required
+                                  value={custName}
+                                  onChange={(e) => setCustName(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="Alex Johnson"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.custName ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.custName && <p className="text-[10px] text-red-500 font-bold">{errors.custName}</p>}
+                            </div>
+
+                            {/* Email Address */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Email Address *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <Mail className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="email"
+                                  required
+                                  value={custEmail}
+                                  onChange={(e) => setCustEmail(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="alex@example.com"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.custEmail ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.custEmail && <p className="text-[10px] text-red-500 font-bold">{errors.custEmail}</p>}
+                            </div>
+
+                            {/* City and Address */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                City & Address *
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <MapPin className="w-4 h-4" />
+                                </div>
+                                <input
+                                  type="text"
+                                  required
+                                  value={custCityAddress}
+                                  onChange={(e) => setCustCityAddress(e.target.value)}
+                                  onFocus={() => setIsTyping(true)}
+                                  onBlur={() => setIsTyping(false)}
+                                  placeholder="e.g. San Francisco, CA"
+                                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border ${
+                                    errors.custCityAddress ? "border-red-500 focus:border-red-500" : "border-[#EAEAEA]/60 focus:border-[#FA5903]/50"
+                                  } text-[#111111] placeholder-gray-400 text-sm focus:outline-none focus:bg-white transition-all shadow-xs`}
+                                />
+                              </div>
+                              {errors.custCityAddress && <p className="text-[10px] text-red-500 font-bold">{errors.custCityAddress}</p>}
+                            </div>
+
+                            {/* Favorite Cuisine */}
+                            <div className="space-y-1">
+                              <label className="text-[11px] font-bold text-gray-700 tracking-wide block">
+                                Favorite Cuisine (Optional)
+                              </label>
+                              <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                  <Utensils className="w-4 h-4" />
+                                </div>
+                                <select
+                                  value={custCuisine}
+                                  onChange={(e) => setCustCuisine(e.target.value)}
+                                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#EAEAEA]/60 focus:border-[#FA5903]/50 text-[#111111] text-sm focus:outline-none focus:bg-white transition-all shadow-xs appearance-none"
+                                >
+                                  <option value="">Select Cuisine Type</option>
+                                  <option value="Italian">Italian (Pizza, Pasta)</option>
+                                  <option value="Burgers & Fast Food">Burgers & Fast Food</option>
+                                  <option value="Healthy & Salads">Healthy & Salads</option>
+                                  <option value="Asian">Asian (Sushi, Ramen, Stir-fry)</option>
+                                  <option value="Indian">Indian</option>
+                                  <option value="Bakery & Desserts">Bakery & Desserts</option>
+                                  <option value="Groceries">Fresh Groceries</option>
+                                  <option value="Other">Other</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400 text-xs">
+                                  ▼
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Iframe Third-Party Cookie Warning */}
+                          <AnimatePresence>
+                            {iframeCookieWarning && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="p-4 bg-amber-50 border border-amber-200/80 rounded-xl text-[#6B3F02] text-[11px] leading-relaxed space-y-3 mt-4"
+                              >
+                                <div className="flex items-start gap-2.5 text-left">
+                                  <span className="text-base select-none shrink-0">⚠️</span>
+                                  <div className="text-left">
+                                    <p className="font-bold text-[#452802] text-xs">Secure Verification Blocked</p>
+                                    <p className="text-[#6B3F02]/90 mt-0.5">
+                                      Your browser's security settings are blocking third-party cookies inside this iframe preview. Since our secure registration portal requires verification to persist entries, please open the application in a new tab to submit successfully!
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="pt-1 flex gap-2 justify-start">
+                                  <a
+                                    href={window.location.origin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FA5903] text-white font-extrabold rounded-lg text-[10px] uppercase tracking-wider hover:bg-[#EB5507] transition-all shadow-sm"
+                                  >
+                                    Open in New Tab ↗
+                                  </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => setIframeCookieWarning(false)}
+                                    className="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-[#452802] font-bold rounded-lg text-[10px] uppercase tracking-wider transition-all cursor-pointer"
+                                  >
+                                    Dismiss
+                                  </button>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+
+                          {renderDiagnostics()}
+
+                          {/* Submit */}
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full flex items-center justify-center space-x-2 py-3 mt-4 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-sm transition-all duration-300 shadow-md shadow-orange-950/10 hover:shadow-orange-950/20 cursor-pointer disabled:opacity-50"
+                          >
+                            <Send className="w-4 h-4" />
+                            <span>{isSubmitting ? "Processing..." : "Reserve My Spot"}</span>
+                          </button>
+                        </form>
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>

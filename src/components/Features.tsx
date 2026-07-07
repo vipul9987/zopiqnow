@@ -31,13 +31,13 @@ export default function Features() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <span className="text-xs font-bold tracking-widest text-[#FA5903] uppercase font-mono bg-[#FA5903]/5 px-3 py-1.5 rounded-full border border-[#FA5903]/20">
-            The ZopiqNow Stack
+            Platform Capabilities
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-4 mb-6 leading-none">
-            Engineered for Excellence.
+            Built for Peak Performance.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            We've built an infrastructure that prioritizes product quality, dispatch speed, and financial fairness from the ground up.
+            We are assembling a modern delivery infrastructure engineered to protect restaurant profits, enhance dispatch speeds, and delight early diners.
           </p>
         </div>
 
@@ -82,10 +82,10 @@ export default function Features() {
         >
           <div className="max-w-xl text-left">
             <h3 className="text-2xl font-bold font-display text-[#111111] mb-3">
-              Ready to experience food delivery, reimagined?
+              Ready for the next era of delivery?
             </h3>
             <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
-              We are finalizing our platform integrations with major POS systems, fleet schedules, and payment gateways. Pre-register below to get early invitations and live launch credits.
+              We are finalizing our platform integrations, pilot fleet schedules, and payment gateways. Join the pre-registration cohort today to secure early access and exclusive launch credits.
             </p>
           </div>
           <div className="flex items-center gap-[15px] shrink-0 flex-wrap">

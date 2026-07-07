@@ -22,6 +22,47 @@ export interface RestaurantInput {
   menu?: string;
 }
 
+export interface CustomerInput {
+  name: string;
+  email: string;
+  cityAddress: string;
+  favoriteCuisine?: string;
+}
+
+export function validateCustomer(data: Partial<CustomerInput>) {
+  const errors: Record<string, string> = {};
+
+  const name = (data.name || "").trim();
+  const email = (data.email || "").trim();
+  const cityAddress = (data.cityAddress || "").trim();
+  const favoriteCuisine = (data.favoriteCuisine || "").trim();
+
+  if (!name) {
+    errors.name = "Name is required";
+  }
+
+  if (!email) {
+    errors.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errors.email = "Invalid email format";
+  }
+
+  if (!cityAddress) {
+    errors.cityAddress = "City Name & Address is required";
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    sanitized: {
+      name: sanitizeInput(name),
+      email: sanitizeInput(email),
+      cityAddress: sanitizeInput(cityAddress),
+      favoriteCuisine: sanitizeInput(favoriteCuisine),
+    }
+  };
+}
+
 export function validateRestaurant(data: Partial<RestaurantInput>) {
   const errors: Record<string, string> = {};
 

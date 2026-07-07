@@ -80,7 +80,7 @@ export default function Navbar({ onPreRegisterClick }: NavbarProps) {
             onClick={onPreRegisterClick}
             className="px-5 py-2.5 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-sm shadow-[0_10px_30px_-10px_rgba(232,67,31,0.5)] transition duration-300 cursor-pointer transform hover:-translate-y-0.5"
           >
-            Apply for Cohort
+            Become a Launch Partner
           </button>
         </div>
 
@@ -127,7 +127,7 @@ export default function Navbar({ onPreRegisterClick }: NavbarProps) {
                 }}
                 className="w-full py-2.5 rounded-full bg-[#FA5903] text-white text-xs font-bold shadow-md cursor-pointer text-center"
               >
-                Apply for Cohort
+                Become a Launch Partner
               </button>
             </div>
           </motion.div>

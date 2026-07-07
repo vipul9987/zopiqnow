@@ -102,10 +102,10 @@ export default function Hero({ onCtaClick }: HeroProps) {
           className="inline-flex items-center gap-2 rounded-full border border-[#EAEAEA] bg-[#FFFFFF]/80 px-4 py-1.5 text-xs font-bold text-[#111111] shadow-xs backdrop-blur-xs"
         >
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75 animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
           </span>
-          <span>Now live in 42 cities · Avg. delivery 27 min</span>
+          <span>Preparing for Launch · Pre-registrations Now Open</span>
         </motion.div>
 
         {/* Headline */}
@@ -115,7 +115,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
           transition={{ duration: 0.7, delay: 0.05 }}
           className="mt-8 font-hero font-black tracking-tight text-[2.85rem] leading-[1.05] sm:text-6xl lg:text-7xl text-[#111111] max-w-5xl mx-auto"
         >
-          Dinner's already <span className="text-[#FA5903] italic">on its way</span> —<br className="hidden sm:block" /> track every step.
+          The Future of Food Delivery <span className="text-[#FA5903] italic">Starts Here</span> —<br className="hidden sm:block" /> Launching Soon.
         </motion.h1>
 
         {/* Sub-headline description */}
@@ -125,7 +125,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-[#555555] leading-relaxed font-sans"
         >
-          From the kitchen line to your front door, ZopiqNow shows you the whole journey in real time. Hot food, fresh groceries, and zero guesswork.
+          From your neighborhood's hidden gems to fresh groceries delivered with speed, ZopiqNow is getting ready to launch. Pre-registrations are open now. Secure your spot today!
         </motion.p>
 
         {/* Dual CTAs */}
@@ -139,15 +139,15 @@ export default function Hero({ onCtaClick }: HeroProps) {
             onClick={onCtaClick}
             className="whitespace-nowrap w-full sm:w-auto px-6 py-4 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-black text-sm sm:text-base shadow-[0_12px_30px_-10px_rgba(255,90,54,0.6)] transition-all duration-300 hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
-            <span>Apply for Partner Cohort</span>
+            <span>Become a Launch Partner</span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <button
-            onClick={handleSeeHowItWorks}
+            onClick={onCtaClick}
             className="whitespace-nowrap w-full sm:w-auto px-6 py-4 rounded-full bg-white hover:bg-[#FA5903]/5 border border-[#FA5903] text-[#FA5903] font-bold text-sm sm:text-base shadow-xs transition-all duration-300 hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#FA5903] text-white text-[9px] pl-0.5">▶</span>
-            <span>See how it works</span>
+            <span>Get Early Access</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
 
@@ -352,7 +352,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
             onClick={onCtaClick}
             className="px-5 py-2.5 rounded-full border border-[#EAEAEA] text-[#111111] hover:bg-[#111111] hover:text-white font-extrabold text-xs transition-all duration-300 whitespace-nowrap cursor-pointer flex items-center justify-center"
           >
-            Become a Partner
+            Become a Launch Partner
           </button>
         </motion.div>
       </div>
