@@ -6,6 +6,7 @@ import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
 import WhoCanJoin from "./components/WhoCanJoin";
 import PreRegistration from "./components/PreRegistration";
+import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
 
 export default function App() {
@@ -55,6 +56,9 @@ export default function App() {
       <PreRegistration
         onRestaurantRegister={() => {}}
       />
+
+      {/* 9. Pre-registration FAQs */}
+      <FAQ />
 
       {/* 11. Footer Section with Newsletter signup */}
       <Footer />

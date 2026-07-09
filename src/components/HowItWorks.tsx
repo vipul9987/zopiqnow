@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Store, ShieldCheck, ClipboardCheck, Play } from "lucide-react";
+import { Store, ShieldCheck, ClipboardCheck, PhoneCall } from "lucide-react";
 import { motion } from "motion/react";
 
 interface StepItem {
@@ -12,27 +12,27 @@ interface StepItem {
 const merchantSteps: StepItem[] = [
   {
     step: "01",
-    title: "Reserve Your Spot",
-    description: "Submit your pre-registration in under 2 minutes. Secure early launch benefits and lock in introductory pricing.",
+    title: "Submit Your Pre Registration",
+    description: "Fill out our brief, secure partner form in less than two minutes to express your interest.",
     icon: <Store className="w-6 h-6 text-[#FA5903]" />
   },
   {
     step: "02",
-    title: "Business Verification",
-    description: "Our merchant team verifies your kitchen operations, licensing, and menu structure to ensure top-tier quality standards.",
+    title: "Business Review",
+    description: "Our local operations team reviews your application to ensure we align on service capabilities and locations.",
     icon: <ShieldCheck className="w-6 h-6 text-[#FA5903]" />
   },
   {
     step: "03",
-    title: "Onboarding & Training",
-    description: "Receive free professional menu photography, custom tablet kits, and step-by-step training for your kitchen staff.",
-    icon: <ClipboardCheck className="w-6 h-6 text-[#FA5903]" />
+    title: "We'll Contact You",
+    description: "We will reach out to you directly via phone or email as we plan the launch rollout in your area.",
+    icon: <PhoneCall className="w-6 h-6 text-[#FA5903]" />
   },
   {
     step: "04",
-    title: "Go Live on Launch Day",
-    description: "Open your virtual doors to high-volume local customer groups on Launch Day with a flat, sustainable 8% commission.",
-    icon: <Play className="w-6 h-6 text-[#FA5903]" />
+    title: "Complete Onboarding Before Launch",
+    description: "Set up your virtual menus, configure your dashboard settings, and prepare to go live with dedicated support.",
+    icon: <ClipboardCheck className="w-6 h-6 text-[#FA5903]" />
   }
 ];
 
@@ -51,14 +51,14 @@ export default function HowItWorks() {
         <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
           <div className="inline-block mb-3 sm:mb-4">
             <span className="text-xs font-bold tracking-widest text-[#FA5903] uppercase font-mono bg-[#FA5903]/5 px-3 py-1.5 rounded-full border border-[#FA5903]/20">
-              Merchant Journey
+              Onboarding Blueprint
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-2 mb-4 leading-tight">
-            How to Get Started
+            How It Works
           </h2>
           <p className="text-[#555555] text-sm sm:text-base md:text-lg font-sans leading-relaxed max-w-xl mx-auto">
-            A simple, high-support onboarding blueprint designed to prepare your food business for high-volume orders from Day 1.
+            A simple, straightforward, and supportive process designed to connect your kitchen smoothly with our upcoming pre-launch ecosystem.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 import { 
   Clock, DollarSign, MessageSquare, Utensils, TrendingDown, 
   EyeOff, ShieldAlert, BarChart3, Zap, ShieldCheck, 
-  Sparkles, TrendingUp, Headphones, AlertCircle
+  Sparkles, TrendingUp, Headphones, AlertCircle, LayoutDashboard
 } from "lucide-react";
 import { motion } from "motion/react";
 import { restaurantProblems, solutions } from "../data";
@@ -22,6 +22,7 @@ const getIconComponent = (name: string, className: string) => {
     case "Sparkles": return <Sparkles className={className} />;
     case "TrendingUp": return <TrendingUp className={className} />;
     case "Headphones": return <Headphones className={className} />;
+    case "LayoutDashboard": return <LayoutDashboard className={className} />;
     default: return <AlertCircle className={className} />;
   }
 };
@@ -33,16 +34,17 @@ export default function ProblemsSolutions() {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-red-200/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto section-container-padding relative z-10">
+        
         {/* SECTION HEADER: PROBLEMS */}
         <div id="problems" className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold tracking-widest text-[#FA5903] uppercase font-mono bg-[#FA5903]/5 px-3 py-1.5 rounded-full border border-[#FA5903]/20">
             The Industry Struggle
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-4 mb-6 leading-none">
-            The Food Delivery System is <span className="text-[#FA5903]">Broken</span>.
+            Why Traditional Delivery is <span className="text-[#FA5903]">Broken</span>.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            High commission rates of up to 35% make legacy platforms unprofitable for independent kitchens, while visibility bid wars bury authentic local creators.
+            High marketplace standard commissions can erode independent margins, while search ranking algorithms favor major chains over local culinary spots.
           </p>
         </div>
 
@@ -76,13 +78,13 @@ export default function ProblemsSolutions() {
         {/* SECTION HEADER: SOLUTIONS */}
         <div id="solutions" className="text-center max-w-3xl mx-auto mb-16 pt-8">
           <span className="text-xs font-bold tracking-widest text-emerald-600 uppercase font-mono bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full">
-            The ZopiqNow Paradigm
+            Why Join Before Launch?
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#111111] mt-4 mb-6 leading-none">
-            A Better Way for Your Kitchen.
+            Secure Your Launch Partner Benefits.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            By optimizing routing, eliminating corporate bloat, and keeping our commission low, ZopiqNow builds a fair, sustainable ecosystem that works for food businesses.
+            Shape the future of delivery in your area. Secure priority placement, direct expert setup, and early platform access by joining our initial launch wave.
           </p>
         </div>
 

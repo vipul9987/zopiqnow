@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Star, Clock, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Shield, Sparkles } from "lucide-react";
 
 interface HeroProps {
   onCtaClick: () => void;
 }
 
 export default function Hero({ onCtaClick }: HeroProps) {
-  const [progress, setProgress] = useState(65);
   const [riderPos, setRiderPos] = useState({ x: 420, y: 230 });
   const [riderOpacity, setRiderOpacity] = useState(1);
   const [dashOffset, setDashOffset] = useState(0);
@@ -47,16 +46,9 @@ export default function Hero({ onCtaClick }: HeroProps) {
         const pt = pathEl.getPointAtLength(currentLen);
         setRiderPos({ x: pt.x, y: pt.y });
 
-        if (draw > 0.02 && draw < 0.98) {
-          setRiderOpacity(1);
-        } else {
-          setRiderOpacity(1); // Keep visible
-        }
-
-        const pct = Math.round(35 + draw * 50);
-        setProgress(pct > 95 ? 95 : pct);
+        setRiderOpacity(1); // Keep visible
       } catch (err) {
-        setProgress(Math.round(35 + draw * 50));
+        // Fallback
       }
     };
 
@@ -102,7 +94,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
           className="inline-flex items-center gap-2 rounded-full border border-[#EAEAEA] bg-[#FFFFFF]/80 px-4 py-1.5 text-xs font-bold text-[#111111] shadow-xs backdrop-blur-xs"
         >
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75 animate-ping" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
           </span>
           <span>Exclusive Launch Partner Program · Pre-registrations Now Live</span>
@@ -115,7 +107,8 @@ export default function Hero({ onCtaClick }: HeroProps) {
           transition={{ duration: 0.7, delay: 0.05 }}
           className="mt-8 font-hero font-black tracking-tight text-[2.85rem] leading-[1.05] sm:text-6xl lg:text-7xl text-[#111111] max-w-5xl mx-auto"
         >
-          The Sustainable Food Delivery Platform <span className="text-[#FA5903] italic">Built for Merchants</span> —<br className="hidden sm:block" /> Secure Your Spot Now.
+          Become a Launch Partner <br className="hidden sm:block" />
+          <span className="text-[#FA5903] italic">Before We Go Live</span>
         </motion.h1>
 
         {/* Sub-headline description */}
@@ -125,7 +118,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-[#555555] leading-relaxed font-sans"
         >
-          Join an exclusive network of restaurants, cafes, cloud kitchens, bakeries, and food brands before the official public release. Lock in our flat 8% commission rate, free premium menu setup, and prime platform placement.
+          Join the first wave of restaurants shaping the future of food delivery with ZopiqNow. Secure priority support and prime platform visibility ahead of our launch.
         </motion.p>
 
         {/* Dual CTAs */}
@@ -146,7 +139,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
             onClick={handleSeeHowItWorks}
             className="whitespace-nowrap w-full sm:w-auto px-6 py-4 rounded-full bg-white hover:bg-[#FA5903]/5 border border-[#FA5903] text-[#FA5903] font-bold text-sm sm:text-base shadow-xs transition-all duration-300 hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
-            <span>Explore Partner Benefits</span>
+            <span>Explore Onboarding Steps</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
@@ -159,16 +152,16 @@ export default function Hero({ onCtaClick }: HeroProps) {
           className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-[#555555] font-semibold"
         >
           <span className="inline-flex items-center gap-1.5">
-            <span className="text-emerald-600 font-bold">✓</span> Flat 8% Sustainable Commission
+            <span className="text-emerald-600 font-bold">✓</span> Priority Onboarding
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span>🕒</span> 0% commission for first 30 days
+            <span>🕒</span> Early Platform Access
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span>🛡</span> Free Professional Menu Setup
+            <span>🛡</span> Launch Day Visibility
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span>✨</span> Zero sign-up fee
+            <span>✨</span> Direct Onboarding Support
           </span>
         </motion.div>
       </div>
@@ -196,19 +189,19 @@ export default function Hero({ onCtaClick }: HeroProps) {
         <div aria-hidden="true" className="absolute left-[8%] top-[14%] hidden md:block float-y">
           <div className="rounded-2xl border border-[#EAEAEA]/60 px-3.5 py-2 shadow-xs flex items-center gap-2 bg-[#FFFFFF]/95 backdrop-blur-xs">
             <span className="text-sm">🍕</span>
-            <span className="text-xs font-bold text-[#111111]">Pizzerias</span>
+            <span className="text-xs font-bold text-[#111111]">Restaurants</span>
           </div>
         </div>
         <div aria-hidden="true" className="absolute right-[8%] top-[12%] hidden md:block float-y" style={{ animationDelay: "-2s" }}>
           <div className="rounded-2xl border border-[#EAEAEA]/60 px-3.5 py-2 shadow-xs flex items-center gap-2 bg-[#FFFFFF]/95 backdrop-blur-xs">
-            <span className="text-sm">🍰</span>
-            <span className="text-xs font-bold text-[#111111]">Bakeries</span>
+            <span className="text-sm">☕</span>
+            <span className="text-xs font-bold text-[#111111]">Cafes</span>
           </div>
         </div>
         <div aria-hidden="true" className="absolute right-[12%] bottom-[16%] hidden md:block float-y" style={{ animationDelay: "-4s" }}>
           <div className="rounded-2xl border border-[#EAEAEA]/60 px-3.5 py-2 shadow-xs flex items-center gap-2 bg-[#FFFFFF]/95 backdrop-blur-xs">
-            <span className="text-sm">🍔</span>
-            <span className="text-xs font-bold text-[#111111]">QSR Brands</span>
+            <span className="text-sm">🍳</span>
+            <span className="text-xs font-bold text-[#111111]">Cloud Kitchens</span>
           </div>
         </div>
 
@@ -254,12 +247,12 @@ export default function Hero({ onCtaClick }: HeroProps) {
           >
             <div className="relative grid place-items-center w-7 h-7">
               <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-60 animate-ping" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-500" />
               </span>
             </div>
             <div className="rounded-full border border-[#EAEAEA]/60 px-3 py-1 text-[11px] font-bold shadow-xs bg-[#FFFFFF] text-[#111111]">
-              Submit details
+              Pre-Registration
             </div>
           </motion.div>
 
@@ -273,16 +266,16 @@ export default function Hero({ onCtaClick }: HeroProps) {
           >
             <div className="relative grid place-items-center w-7 h-7">
               <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-60 animate-ping" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-500" />
               </span>
             </div>
             <div className="rounded-full border border-[#EAEAEA]/60 px-3 py-1 text-[11px] font-bold shadow-xs bg-[#FFFFFF] text-[#111111]">
-              Merchant audit
+              Business Review
             </div>
           </motion.div>
 
-          {/* Step 3: Direct Integration */}
+          {/* Step 3: We'll Contact You */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -298,7 +291,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
             </div>
             <div className="rounded-full border border-[#FA5903]/30 px-3 py-1 text-[11px] font-bold shadow-xs bg-[#FFFFFF] text-[#111111] inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#FA5903]" />
-              <span>Menu setup</span>
+              <span>Contact & Setup</span>
             </div>
           </motion.div>
 
@@ -314,13 +307,13 @@ export default function Hero({ onCtaClick }: HeroProps) {
               <div className="h-2.5 w-2.5 rounded-full border border-gray-300 bg-white" />
             </div>
             <div className="rounded-full border border-[#EAEAEA]/60 px-3 py-1 text-[11px] font-bold shadow-xs bg-[#FFFFFF] text-[#555555]/60">
-              Live Priority Launch
+              Complete Onboarding
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* LIVE ORDER PROGRESS STRIP */}
+      {/* LIVE PARTNER ACTION STRIP */}
       <div className="relative max-w-4xl mx-auto px-5 md:px-8 pb-12 z-10">
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
@@ -331,29 +324,22 @@ export default function Hero({ onCtaClick }: HeroProps) {
           <div className="flex items-center gap-3.5">
             <div className="grid place-items-center w-12 h-12 rounded-2xl bg-[#FA5903]/5 text-2xl">🏬</div>
             <div className="text-left">
-              <p className="text-sm sm:text-base font-extrabold leading-tight text-[#111111]">Exclusive Launch Program</p>
-              <p className="text-xs text-[#555555] mt-0.5 font-semibold">Priority Feed Allocation · Sustainable 8% Flat Fee</p>
+              <p className="text-sm sm:text-base font-extrabold leading-tight text-[#111111]">Become an Early Launch Partner</p>
+              <p className="text-xs text-[#555555] mt-0.5 font-semibold">Priority Onboarding · Zero Setup Fees</p>
             </div>
           </div>
           
           <div className="hidden md:block w-px h-12 bg-[#EAEAEA]/60" />
           
-          <div className="flex-1">
-            <div className="flex items-center justify-between text-xs font-bold mb-2">
-              <span className="text-[#555555]">Launch Partner Allocations filled</span>
-              <span className="text-[#FA5903]">{progress}% · Wave 1 Closing Soon</span>
-            </div>
-            <div className="h-2 rounded-full bg-[#EAEAEA] overflow-hidden">
-              <div 
-                className="h-full rounded-full bg-[#FA5903] transition-all duration-300" 
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+          <div className="flex-1 text-left">
+            <p className="text-xs text-[#555555] leading-relaxed">
+              Register your food business today to receive onboarding updates before ZopiqNow launches in your city.
+            </p>
           </div>
 
           <button 
             onClick={onCtaClick}
-            className="px-5 py-2.5 rounded-full border border-[#EAEAEA] text-[#111111] hover:bg-[#111111] hover:text-white font-extrabold text-xs transition-all duration-300 whitespace-nowrap cursor-pointer flex items-center justify-center"
+            className="px-5 py-2.5 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white font-extrabold text-xs transition-all duration-300 whitespace-nowrap cursor-pointer flex items-center justify-center"
           >
             Become a Launch Partner
           </button>
@@ -364,31 +350,27 @@ export default function Hero({ onCtaClick }: HeroProps) {
       <section className="relative border-y border-[#EAEAEA]/50 bg-[#FFFFFF]/60 overflow-hidden z-10">
         <div className="marquee-container py-3 text-xs font-bold tracking-wider text-[#555555] uppercase">
           <div className="marquee-content">
-            <span>🍕 Pizzerias</span>
+            <span>🍕 Restaurants</span>
             <span>☕ Cafes</span>
             <span>🍳 Cloud Kitchens</span>
             <span>🥖 Bakeries</span>
             <span>🍰 Dessert Shops</span>
-            <span>🍧 Sweet Shops</span>
             <span>🍹 Juice Bars</span>
+            <span>🏢 Food Courts</span>
+            <span>🛍 Mall Food Outlets</span>
             <span>🍔 Fast Food Chains</span>
-            <span>🍷 Fine Dining</span>
-            <span>🍱 Casual Dining</span>
-            <span>🥡 Takeaways</span>
             <span>🚚 Food Trucks</span>
             
             {/* Duplicated for seamless loop */}
-            <span>🍕 Pizzerias</span>
+            <span>🍕 Restaurants</span>
             <span>☕ Cafes</span>
             <span>🍳 Cloud Kitchens</span>
             <span>🥖 Bakeries</span>
             <span>🍰 Dessert Shops</span>
-            <span>🍧 Sweet Shops</span>
             <span>🍹 Juice Bars</span>
+            <span>🏢 Food Courts</span>
+            <span>🛍 Mall Food Outlets</span>
             <span>🍔 Fast Food Chains</span>
-            <span>🍷 Fine Dining</span>
-            <span>🍱 Casual Dining</span>
-            <span>🥡 Takeaways</span>
             <span>🚚 Food Trucks</span>
           </div>
         </div>

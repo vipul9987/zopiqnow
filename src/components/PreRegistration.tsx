@@ -463,62 +463,7 @@ export default function PreRegistration({
   };
 
   const renderDiagnostics = () => {
-    if (!debugInfo) return null;
-    return (
-      <div className="mt-4 p-4 bg-red-50/90 border border-red-200/80 rounded-xl text-left font-sans text-xs text-red-900 shadow-xs">
-        <div className="flex items-center justify-between border-b border-red-200/50 pb-2 mb-2">
-          <span className="font-bold text-red-950 uppercase tracking-wider text-[10px] font-mono flex items-center gap-1">
-            <span className="animate-pulse text-red-600 font-bold">●</span> System Diagnostics
-          </span>
-          <button 
-            type="button" 
-            onClick={() => setDebugInfo(null)}
-            className="text-red-500 hover:text-red-700 font-bold px-1.5 py-0.5 rounded-md hover:bg-red-100 transition-all cursor-pointer font-mono text-[10px]"
-          >
-            Clear
-          </button>
-        </div>
-        <p className="font-semibold text-red-950 mb-1 leading-tight">
-          {debugInfo.errorMessage || "An unexpected network or server error occurred."}
-        </p>
-        <p className="text-[10px] text-red-800/80 mb-2 font-mono break-all leading-relaxed">
-          Failed: {debugInfo.method} {debugInfo.url} {debugInfo.status ? `(Status: ${debugInfo.status} ${debugInfo.statusText || ""})` : ""}
-        </p>
-        
-        <details className="mt-2 bg-white/70 border border-red-100/50 rounded-lg overflow-hidden">
-          <summary className="px-2.5 py-1.5 text-[10px] font-bold text-red-900 cursor-pointer select-none bg-red-100/30 hover:bg-red-100/50 transition-all">
-            View Technical Debug Details
-          </summary>
-          <div className="p-3 font-mono text-[9px] text-red-950 space-y-2 overflow-x-auto leading-normal bg-white/95 max-h-60">
-            <div>
-              <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Error Name & Message:</span>
-              <pre className="whitespace-pre-wrap font-mono mt-0.5 break-all text-red-700/90 bg-red-50/50 p-1.5 rounded border border-red-100/50">
-                {debugInfo.errorName}: {debugInfo.errorMessage}
-                {debugInfo.errorStack && `\n${debugInfo.errorStack}`}
-              </pre>
-            </div>
-            {debugInfo.rawResponse && (
-              <div>
-                <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Raw Server Response:</span>
-                <pre className="whitespace-pre-wrap font-mono mt-0.5 break-all text-red-700/90 bg-red-50/50 p-1.5 rounded border border-red-100/50">
-                  {debugInfo.rawResponse}
-                </pre>
-              </div>
-            )}
-            <div>
-              <span className="font-bold text-red-800 uppercase text-[8px] tracking-wide block">Browser Environment:</span>
-              <ul className="list-disc pl-3 mt-1 space-y-0.5 text-red-900/80">
-                <li><strong>User Agent:</strong> {debugInfo.browserEnv?.userAgent}</li>
-                <li><strong>Origin:</strong> {debugInfo.browserEnv?.origin}</li>
-                <li><strong>Current URL:</strong> {debugInfo.browserEnv?.href}</li>
-                <li><strong>Inside Iframe:</strong> {debugInfo.browserEnv?.isIframe ? "Yes (Cross-domain cookies might be blocked)" : "No"}</li>
-                <li><strong>Cookies Enabled:</strong> {debugInfo.browserEnv?.cookiesEnabled ? "Yes" : "No"}</li>
-              </ul>
-            </div>
-          </div>
-        </details>
-      </div>
-    );
+    return null;
   };
 
   return (
@@ -538,10 +483,10 @@ export default function PreRegistration({
             Join the Launch
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight text-[#111111] mt-4 mb-5 leading-none">
-            Built for Food Businesses. Designed for Growth.
+            Become a Launch Partner
           </h2>
           <p className="text-[#555555] text-xs sm:text-sm md:text-base leading-relaxed">
-            Pre-register today as an early launch partner and lock in our sustainable flat 8% commission rate, free professional menu setups, and prime feed exposure.
+            Register your restaurant today to receive onboarding updates before ZopiqNow launches in your city.
           </p>
         </div>
 
@@ -752,62 +697,19 @@ export default function PreRegistration({
                     <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 mx-auto mb-4">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-display font-extrabold text-[#111111] mb-2">
-                      Become a Launch Partner
+                    <h3 className="text-2xl sm:text-3xl font-display font-black text-[#111111] mb-2">
+                      Thank You!
                     </h3>
-                    <p className="text-[#555555] max-w-md mx-auto text-xs sm:text-sm leading-relaxed mb-6">
-                      Application recorded for <span className="text-[#111111] font-semibold">{restName}</span> (managed by <span className="text-[#FA5903] font-semibold">{restOwnerName}</span>). We've assigned a dedicated partner manager to audit your details. We will contact you at <span className="text-[#FA5903] font-medium">{restPhone}</span>.
+                    <p className="text-sm font-bold text-[#FA5903] mb-4">
+                      We've received your pre registration.
                     </p>
-
-                    {/* Partner Card representation */}
-                    <div className="max-w-sm mx-auto p-5 rounded-[15px] bg-gradient-to-tr from-emerald-100/10 via-white to-white/90 border border-[#EAEAEA]/60 text-left mb-6 shadow-xs relative overflow-hidden">
-                      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-100/5 rounded-full blur-2xl" />
-                      <div className="flex items-center justify-between mb-6">
-                        <div>
-                          <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 font-bold">Partner Code</p>
-                          <h4 className="text-base font-bold font-display text-[#111111]">Wave 1 Launch Partner</h4>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[9px] font-mono text-gray-400 uppercase">Comm. Guarantee</p>
-                          <p className="text-sm font-extrabold text-emerald-600 font-mono">8% Intro</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between border-t border-black/5 pt-3 text-xs font-sans text-gray-500">
-                        <div>
-                          <p className="text-[9px] text-gray-400 uppercase font-mono">Status</p>
-                          <p className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-0.5 rounded-full uppercase inline-block">Pending Audit</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[9px] text-gray-400 uppercase font-mono">Dedicated Agent</p>
-                          <p className="text-[10px] text-[#1A1A1A] font-semibold font-display">TBD (Assigned 24h)</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {sheetsStatus && !sheetsStatus.configured && (
-                      <div className="max-w-sm mx-auto p-4 mb-6 rounded-xl bg-amber-50 border border-amber-200 text-left text-[11px] text-[#7A5B00] space-y-1.5 leading-relaxed">
-                        <p className="font-bold text-[#8F4300] flex items-center gap-1">
-                          ⚠️ Google Sheet Sync Pending
-                        </p>
-                        <p>
-                          <strong>Error:</strong> {sheetsStatus.error || "Environment credentials not configured."}
-                        </p>
-                        <p className="text-[10px] text-gray-500">
-                          Please verify your <code>GOOGLE_SHEET_ID</code>, <code>GOOGLE_CLIENT_EMAIL</code>, and <code>GOOGLE_PRIVATE_KEY</code>. Make sure the spreadsheet is shared with Editor access to your Client Email.
-                        </p>
-                      </div>
-                    )}
-
-                    {sheetsStatus && sheetsStatus.configured && (
-                      <div className="max-w-sm mx-auto p-3.5 mb-6 rounded-xl bg-emerald-50 border border-emerald-100 text-left text-[11px] text-emerald-800 flex items-center gap-2">
-                        <span className="text-emerald-600 font-bold text-sm">✓</span>
-                        <span className="font-medium text-emerald-900">Successfully synced directly to your Google Sheet!</span>
-                      </div>
-                    )}
+                    <p className="text-[#555555] max-w-md mx-auto text-xs sm:text-sm leading-relaxed mb-8">
+                      Our team will review your information and contact you when onboarding begins in your city.
+                    </p>
 
                     <button
                       onClick={resetForms}
-                      className="px-6 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-600 hover:text-[#1A1A1A] transition-all cursor-pointer shadow-sm animate-pulse"
+                      className="px-6 py-2 rounded-xl bg-[#FA5903] hover:bg-[#EB5507] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                     >
                       Onboard Another Kitchen
                     </button>

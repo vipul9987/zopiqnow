@@ -9,27 +9,27 @@ export default function WhoCanJoin({ onCtaClick }: WhoCanJoinProps) {
   const categories = [
     {
       title: "Restaurants & Dining",
-      description: "Fine Dining, Casual Dining, Fast Food Chains, QSR Brands, and Pizzerias looking to scale high-margin deliveries.",
+      description: "Fine Dining, Casual Dining, Fast Food Chains, and Pizzerias looking to establish early pre-launch partner status.",
       icon: <Pizza className="w-5 h-5 text-[#FA5903]" />,
-      features: ["Flat 8% Commission", "Next-Day Payouts", "First Wave Badging"]
+      features: ["Priority Onboarding", "Early System Access", "Launch Wave Priority"]
     },
     {
-      title: "Cafes & Sweet Shops",
-      description: "Cafes, Bakeries, Dessert Shops, Sweet Shops, and Juice Bars requiring fast, temperature-managed dispatch.",
+      title: "Cafes & Bakeries",
+      description: "Cafes, Bakeries, Dessert Shops, and Juice Bars requiring fast, direct dispatch systems.",
       icon: <Coffee className="w-5 h-5 text-[#FA5903]" />,
-      features: ["Thermal-Insulated Fleet", "Menu Customization", "Staff Setup Kits"]
+      features: ["Custom Menu Settings", "Staff Support Kits", "Dedicated Onboarding"]
     },
     {
       title: "Cloud & Virtual Kitchens",
-      description: "Cloud Kitchens, Virtual Brands, Takeaway Outlets, and Food Trucks with a focus on high-efficiency logistics.",
+      description: "Cloud Kitchens, Virtual Brands, Takeaway Outlets, and Food Trucks seeking reliable pre-launch updates.",
       icon: <CookingPot className="w-5 h-5 text-[#FA5903]" />,
-      features: ["Direct API Dashboard", "Custom Flow Buffer", "Peak Slot Predictions"]
+      features: ["Merchant Portal Access", "Custom Flow Buffers", "Priority Launch Planning"]
     },
     {
       title: "Food Courts & Outlets",
-      description: "Mall Food Outlets, Food Courts, and multi-concept food spaces looking to aggregate local customer demand.",
+      description: "Mall Food Outlets, Food Courts, and aggregated food spaces preparing for future digital channels.",
       icon: <Store className="w-5 h-5 text-[#FA5903]" />,
-      features: ["Multi-Menu Setup", "Bulk Invoicing", "Dedicated Operations Support"]
+      features: ["Multi-Brand Controls", "Operations Assistance", "Dedicated Manager Support"]
     }
   ];
 
@@ -49,7 +49,7 @@ export default function WhoCanJoin({ onCtaClick }: WhoCanJoinProps) {
             Designed for Every Food Business.
           </h2>
           <p className="text-[#555555] text-base sm:text-lg">
-            We are curating an elite network of culinary partners for our launch program. Review our eligibility circles and claim your spot today.
+            We are welcoming licensed food businesses of all sizes to pre-register. Review our partner divisions and claim your priority onboarding slot.
           </p>
         </div>
 
