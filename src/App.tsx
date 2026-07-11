@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import ProblemsSolutions from "./components/ProblemsSolutions";
-import HowItWorks from "./components/HowItWorks";
-import Features from "./components/Features";
 import WhoCanJoin from "./components/WhoCanJoin";
 import PreRegistration from "./components/PreRegistration";
 import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
+
+// Lazy-loaded components with perfect skeletons
+import HowItWorksSkeleton from "./components/skeletons/HowItWorksSkeleton";
+import FeaturesSkeleton from "./components/skeletons/FeaturesSkeleton";
+
+const HowItWorks = lazy(() => import("./components/HowItWorks"));
+const Features = lazy(() => import("./components/Features"));
 
 export default function App() {
   // 1. Scroll & Focus Trigger
@@ -44,10 +49,14 @@ export default function App() {
       <ProblemsSolutions />
 
       {/* 4. Interactive How It Works Onboarding Steps */}
-      <HowItWorks />
+      <Suspense fallback={<HowItWorksSkeleton />}>
+        <HowItWorks />
+      </Suspense>
 
       {/* 5. Sleek Features Bento Grid */}
-      <Features />
+      <Suspense fallback={<FeaturesSkeleton />}>
+        <Features />
+      </Suspense>
 
       {/* 6. Dynamic Call-To-Action Cards */}
       <WhoCanJoin onCtaClick={triggerPreRegisterFocus} />

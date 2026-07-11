@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { 
   Zap, Sparkles, LayoutDashboard, BarChart3, CreditCard, 
   AlertCircle, Clock, ShieldCheck, Headphones
@@ -20,7 +21,7 @@ const getFeatureIcon = (name: string, className: string) => {
   }
 };
 
-export default function Features() {
+function Features() {
   return (
     <div id="features" className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 pt-[35px] pb-[70px]">
       {/* Abstract Background Accents */}
@@ -108,3 +109,5 @@ export default function Features() {
     </div>
   );
 }
+
+export default memo(Features);

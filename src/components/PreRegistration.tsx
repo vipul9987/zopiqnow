@@ -10,6 +10,8 @@ interface PupilProps {
   pupilColor?: string;
   forceLookX?: number;
   forceLookY?: number;
+  mouseX: number;
+  mouseY: number;
 }
 
 const Pupil = ({ 
@@ -17,23 +19,11 @@ const Pupil = ({
   maxDistance = 3,
   pupilColor = "black",
   forceLookX,
-  forceLookY
+  forceLookY,
+  mouseX,
+  mouseY
 }: PupilProps) => {
-  const [mouseX, setMouseX] = useState<number>(0);
-  const [mouseY, setMouseY] = useState<number>(0);
   const pupilRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMouseX(e.clientX);
-      setMouseY(e.clientY);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   const calculatePupilPosition = () => {
     if (!pupilRef.current) return { x: 0, y: 0 };
@@ -83,6 +73,8 @@ interface EyeBallProps {
   isBlinking?: boolean;
   forceLookX?: number;
   forceLookY?: number;
+  mouseX: number;
+  mouseY: number;
 }
 
 const EyeBall = ({ 
@@ -93,23 +85,11 @@ const EyeBall = ({
   pupilColor = "black",
   isBlinking = false,
   forceLookX,
-  forceLookY
+  forceLookY,
+  mouseX,
+  mouseY
 }: EyeBallProps) => {
-  const [mouseX, setMouseX] = useState<number>(0);
-  const [mouseY, setMouseY] = useState<number>(0);
   const eyeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMouseX(e.clientX);
-      setMouseY(e.clientY);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   const calculatePupilPosition = () => {
     if (!eyeRef.current) return { x: 0, y: 0 };
@@ -237,11 +217,22 @@ export default function PreRegistration({
   const orangeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Completely disable mousemove tracking on touch-only devices to save CPU and battery
+    const isTouchOnly = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    if (isTouchOnly) return;
+
+    let ticking = false;
     const handleMouseMove = (e: MouseEvent) => {
-      setMouseX(e.clientX);
-      setMouseY(e.clientY);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setMouseX(e.clientX);
+          setMouseY(e.clientY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
@@ -543,6 +534,8 @@ export default function PreRegistration({
                         isBlinking={isPurpleBlinking}
                         forceLookX={isLookingAtEachOther ? 1.5 : undefined}
                         forceLookY={isLookingAtEachOther ? 0 : undefined}
+                        mouseX={mouseX}
+                        mouseY={mouseY}
                       />
                       <EyeBall 
                         size={12} 
@@ -553,6 +546,8 @@ export default function PreRegistration({
                         isBlinking={isPurpleBlinking}
                         forceLookX={isLookingAtEachOther ? 1.5 : undefined}
                         forceLookY={isLookingAtEachOther ? 0 : undefined}
+                        mouseX={mouseX}
+                        mouseY={mouseY}
                       />
                     </div>
                   </div>
@@ -589,6 +584,8 @@ export default function PreRegistration({
                         isBlinking={isBlackBlinking}
                         forceLookX={isLookingAtEachOther ? 0 : undefined}
                         forceLookY={isLookingAtEachOther ? -2 : undefined}
+                        mouseX={mouseX}
+                        mouseY={mouseY}
                       />
                       <EyeBall 
                         size={12} 
@@ -599,6 +596,8 @@ export default function PreRegistration({
                         isBlinking={isBlackBlinking}
                         forceLookX={isLookingAtEachOther ? 0 : undefined}
                         forceLookY={isLookingAtEachOther ? -2 : undefined}
+                        mouseX={mouseX}
+                        mouseY={mouseY}
                       />
                     </div>
                   </div>
@@ -626,8 +625,8 @@ export default function PreRegistration({
                         top: `${50 + (orangePos.faceY || 0)}px`,
                       }}
                     >
-                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" />
-                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" />
+                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" mouseX={mouseX} mouseY={mouseY} />
+                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" mouseX={mouseX} mouseY={mouseY} />
                     </div>
                   </div>
 
@@ -654,8 +653,8 @@ export default function PreRegistration({
                         top: `${25 + (yellowPos.faceY || 0)}px`,
                       }}
                     >
-                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" />
-                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" />
+                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" mouseX={mouseX} mouseY={mouseY} />
+                      <Pupil size={8} maxDistance={3} pupilColor="#2D2D2D" mouseX={mouseX} mouseY={mouseY} />
                     </div>
                     {/* Mouth */}
                     <div 

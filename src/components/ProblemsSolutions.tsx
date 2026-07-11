@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { 
   Clock, DollarSign, MessageSquare, Utensils, TrendingDown, 
   EyeOff, ShieldAlert, BarChart3, Zap, ShieldCheck, 
@@ -27,7 +28,7 @@ const getIconComponent = (name: string, className: string) => {
   }
 };
 
-export default function ProblemsSolutions() {
+function ProblemsSolutions() {
   return (
     <div className="relative overflow-hidden bg-[#FFFFFF] border-y border-[#EAEAEA]/60 pt-[70px] pb-[35px]">
       {/* Decorative Blur Backgrounds */}
@@ -120,3 +121,5 @@ export default function ProblemsSolutions() {
     </div>
   );
 }
+
+export default memo(ProblemsSolutions);

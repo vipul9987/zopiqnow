@@ -9,25 +9,24 @@ interface HeroProps {
 export default function Hero({ onCtaClick }: HeroProps) {
   const [riderPos, setRiderPos] = useState({ x: 420, y: 230 });
   const [riderOpacity, setRiderOpacity] = useState(1);
-  const [dashOffset, setDashOffset] = useState(0);
-  const [totalLength, setTotalLength] = useState(810);
 
   const roadmapRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
+  const pathLengthRef = useRef<number>(810); // Cached total length
 
   useEffect(() => {
     const pathEl = pathRef.current;
     if (pathEl) {
       try {
-        const len = pathEl.getTotalLength();
-        setTotalLength(len);
-        setDashOffset(0);
+        pathLengthRef.current = pathEl.getTotalLength() || 810;
       } catch (err) {
         console.warn("Could not get SVG path length", err);
       }
     }
 
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updatePosition = () => {
       if (!roadmapRef.current || !pathRef.current) return;
       const rect = roadmapRef.current.getBoundingClientRect();
       const vh = window.innerHeight;
@@ -39,22 +38,29 @@ export default function Hero({ onCtaClick }: HeroProps) {
 
       try {
         const pathEl = pathRef.current;
-        const len = pathEl.getTotalLength();
-        setDashOffset(len * (1 - draw));
-
+        const len = pathLengthRef.current;
         const currentLen = len * draw;
         const pt = pathEl.getPointAtLength(currentLen);
         setRiderPos({ x: pt.x, y: pt.y });
-
         setRiderOpacity(1); // Keep visible
       } catch (err) {
         // Fallback
       }
     };
 
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updatePosition();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
-    handleScroll();
+    updatePosition(); // Initial placement
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -176,9 +182,12 @@ export default function Hero({ onCtaClick }: HeroProps) {
         <div className="absolute inset-0 top-6 overflow-hidden rounded-[2.5rem] flex items-center justify-center">
           <div className="relative w-[90%] h-[90%]">
             <img
-              src="https://www.thiings.co/_next/image?url=https%3A%2F%2Flftz25oez4aqbxpq.public.blob.vercel-storage.com%2Fimage-SsfjxCJh43Hr1dqzkbFWUGH3ICZQbH.png&w=320&q=75"
+              src="https://lftz25oez4aqbxpq.public.blob.vercel-storage.com/image-SsfjxCJh43Hr1dqzkbFWUGH3ICZQbH.png"
               alt="Folded 3D delivery map"
-              className="w-full h-full object-contain opacity-95 scale-[1.05]"
+              width={800}
+              height={400}
+              className="w-full h-full object-contain opacity-95 scale-[1.05] aspect-[2/1]"
+              style={{ aspectRatio: "2 / 1" }}
               loading="lazy"
               referrerPolicy="no-referrer"
             />
@@ -220,21 +229,21 @@ export default function Hero({ onCtaClick }: HeroProps) {
               className="opacity-95"
               d="M 60 340 Q 220 40 420 200 T 740 70"
             />
-            {/* moving rider dot marker */}
-            <circle 
-              id="rider-dot" 
-              r="7.5" 
-              fill="#111111" 
-              stroke="#FFF" 
-              strokeWidth="2.5" 
-              cx={riderPos.x} 
-              cy={riderPos.y}
-              style={{ 
-                opacity: riderOpacity,
-                transition: "opacity 0.2s ease, cx 0.1s ease-out, cy 0.1s ease-out"
-              }}
-            />
           </svg>
+
+          {/* moving rider dot marker as a perfect HTML circle div to prevent aspect ratio distortion inside stretched SVG */}
+          <div 
+            id="rider-dot" 
+            className="absolute w-[15px] h-[15px] rounded-full bg-[#111111] border-[2.5px] border-white shadow-md pointer-events-none"
+            style={{ 
+              left: `${(riderPos.x / 800) * 100}%`, 
+              top: `${(riderPos.y / 400) * 100}%`,
+              transform: "translate(-50%, -50%)",
+              opacity: riderOpacity,
+              transition: "opacity 0.2s ease, left 0.1s ease-out, top 0.1s ease-out",
+              zIndex: 20
+            }}
+          />
 
           {/* Staggered Step Markers */}
           {/* Step 1: Pre-Register */}
