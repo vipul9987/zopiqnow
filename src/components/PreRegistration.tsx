@@ -1,7 +1,7 @@
 import { useState, FormEvent, useEffect, useRef, RefObject } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
-  Send, CheckCircle2, MapPin, Phone, Building2, Instagram, FileText, User 
+  Send, CheckCircle2, MapPin, Phone, Building2, Instagram, FileText, User, AlertCircle
 } from "lucide-react";
 
 interface PupilProps {
@@ -188,6 +188,7 @@ export default function PreRegistration({
   const [restInstagram, setRestInstagram] = useState("");
   const [restMenu, setRestMenu] = useState("");
   const [restSuccess, setRestSuccess] = useState(false);
+  const [restFailureMessage, setRestFailureMessage] = useState<string | null>(null);
 
   // UI States
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -373,21 +374,12 @@ export default function PreRegistration({
           menu: restMenu,
         });
         setRestSuccess(true);
-        setSheetsStatus({
-          configured: data.sheetsConfigured ?? true,
-          error: data.sheetsError,
-        });
-        
-        if (data.sheetsConfigured === false) {
-          showToast(
-            `Onboarded successfully! Note: Sheet storage failed (${data.sheetsError || "configuration pending"}).`,
-            "warning"
-          );
-        } else {
-          showToast("Application submitted successfully! Our team will contact you soon 🚀", "success");
-        }
+        setRestFailureMessage(null);
+        showToast("Application submitted successfully!", "success");
       } else {
         const errMessage = data?.message || "Submission failed.";
+        setRestFailureMessage(errMessage);
+        setRestSuccess(false);
         showToast(errMessage, "error");
         if (data?.errors) {
           setErrors(data.errors);
@@ -406,11 +398,6 @@ export default function PreRegistration({
         setDebugInfo(debugData);
 
         console.error("=== SYSTEM DIAGNOSTICS: API RESPONSE FAILURE ===");
-        console.error("Request URL:", url);
-        console.error("Status Code:", response.status, response.statusText);
-        console.error("Server Payload Sent:", payload);
-        console.error("Server Response Raw:", rawText);
-        console.error("Browser Env Details:", debugData.browserEnv);
       }
     } catch (err: any) {
       console.error("=== SYSTEM DIAGNOSTICS: NETWORK / UNEXPECTED FAILURE ===");
@@ -426,15 +413,10 @@ export default function PreRegistration({
       };
       setDebugInfo(debugData);
 
-      console.error("Request URL:", url);
-      console.error("Browser Env Details:", debugData.browserEnv);
-
-      if (window.self !== window.top) {
-        setIframeCookieWarning(true);
-        showToast("Secure session check blocked. Please open in a new tab.", "error");
-      } else {
-        showToast(`Something went wrong: ${err?.message || "Network failure"}. Details logged to console.`, "error");
-      }
+      const errMessage = err?.message || "Network failure";
+      setRestFailureMessage(errMessage);
+      setRestSuccess(false);
+      showToast(errMessage, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -449,6 +431,7 @@ export default function PreRegistration({
     setRestMenu("");
     setHoneypot("");
     setRestSuccess(false);
+    setRestFailureMessage(null);
     setSheetsStatus(null);
     setErrors({});
   };
@@ -691,26 +674,48 @@ export default function PreRegistration({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="text-center py-6"
+                    className="text-center py-8"
                   >
-                    <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 mx-auto mb-4">
-                      <CheckCircle2 className="w-8 h-8" />
+                    <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 mx-auto mb-6 shadow-xs">
+                      <CheckCircle2 className="w-9 h-9" />
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-display font-black text-[#111111] mb-2">
-                      Thank You!
+                    <h3 className="text-2xl sm:text-3xl font-display font-black text-emerald-600 mb-3">
+                      Succeeded!
                     </h3>
-                    <p className="text-sm font-bold text-[#FA5903] mb-4">
-                      We've received your pre registration.
-                    </p>
-                    <p className="text-[#555555] max-w-md mx-auto text-xs sm:text-sm leading-relaxed mb-8">
-                      Our team will review your information and contact you when onboarding begins in your city.
+                    <p className="text-gray-600 max-w-sm mx-auto text-sm leading-relaxed mb-8">
+                      We've received your pre-registration successfully. Thank you for joining!
                     </p>
 
                     <button
                       onClick={resetForms}
-                      className="px-6 py-2 rounded-xl bg-[#FA5903] hover:bg-[#EB5507] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                      className="px-6 py-2.5 rounded-full bg-[#FA5903] hover:bg-[#EB5507] text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm"
                     >
                       Onboard Another Kitchen
+                    </button>
+                  </motion.div>
+                ) : restFailureMessage ? (
+                  <motion.div
+                    key="restaurant-failure"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="text-center py-8"
+                  >
+                    <div className="w-16 h-16 rounded-full bg-red-50 border border-red-100/50 flex items-center justify-center text-red-600 mx-auto mb-6 shadow-xs">
+                      <AlertCircle className="w-9 h-9" />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-display font-black text-red-600 mb-3">
+                      Failed!
+                    </h3>
+                    <p className="text-gray-600 max-w-sm mx-auto text-sm leading-relaxed mb-8">
+                      {restFailureMessage}
+                    </p>
+
+                    <button
+                      onClick={resetForms}
+                      className="px-6 py-2.5 rounded-full bg-gray-950 hover:bg-black text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm"
+                    >
+                      Go Back to Form
                     </button>
                   </motion.div>
                 ) : (
