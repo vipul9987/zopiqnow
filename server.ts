@@ -7,7 +7,7 @@ import { appendToSheet } from "./src/lib/google-sheet.js";
 import { sendAdminNotification, sendCustomerAdminNotification } from "./src/lib/mail.js";
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ override: true });
 
 const app = express();
 const PORT = 3000;

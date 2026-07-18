@@ -375,6 +375,16 @@ export default function PreRegistration({
         });
         setRestSuccess(true);
         setRestFailureMessage(null);
+        if (data.sheetsConfigured === false) {
+          setSheetsStatus({
+            configured: false,
+            error: data.sheetsError || "Google Sheets permission error"
+          });
+        } else {
+          setSheetsStatus({
+            configured: true
+          });
+        }
         showToast("Application submitted successfully!", "success");
       } else {
         const errMessage = data?.message || "Submission failed.";
@@ -685,6 +695,33 @@ export default function PreRegistration({
                     <p className="text-gray-600 max-w-sm mx-auto text-sm leading-relaxed mb-8">
                       We've received your pre-registration successfully. Thank you for joining!
                     </p>
+
+                    {sheetsStatus && !sheetsStatus.configured && (
+                      <div className="mb-8 p-4 bg-orange-50/60 border border-[#FA5903]/30 rounded-xl text-left max-w-md mx-auto">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-[#FA5903] shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                              Google Sheets Setup Required
+                            </h4>
+                            <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
+                              Your registration was captured successfully, but the Google Sheets integration is pending a permission grant.
+                            </p>
+                            <p className="text-[11px] text-gray-600 mt-2 leading-relaxed font-semibold">
+                              Please share your Google Sheet (ID: <code className="bg-gray-100 px-1 rounded font-mono text-[10px]">1A-EMrNSQSMu-rCgBcot9Tskr2Eq85fjqOGKDmNfvElo</code>) with this service account as an <strong>Editor</strong>:
+                            </p>
+                            <div className="mt-2 p-1.5 bg-white border border-gray-150 rounded-md flex items-center justify-between">
+                              <span className="font-mono text-[10px] text-gray-700 select-all font-bold">
+                                google-sheets-logger@zopiqnow-502413.iam.gserviceaccount.com
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-gray-500 mt-2 italic">
+                              Note: Sharing with your main email address <code className="bg-gray-100 px-1 rounded font-mono text-[9px]">zopiqnow2026@gmail.com</code> is not enough, as the API uses the service account email above to write data.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <button
                       onClick={resetForms}
