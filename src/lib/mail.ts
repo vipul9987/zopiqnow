@@ -1,18 +1,30 @@
 import nodemailer from "nodemailer";
 
 let transporter: nodemailer.Transporter | null = null;
+let configuredUser = "";
 
 export function getTransporter() {
   if (!transporter) {
-    const host = process.env.SMTP_HOST || "smtp.gmail.com";
+    const host = (process.env.SMTP_HOST || "smtp.gmail.com").trim();
     const port = parseInt(process.env.SMTP_PORT || "587", 10);
     const secure = process.env.SMTP_SECURE === "true" || false;
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
+    
+    let user = (process.env.SMTP_USER || "").trim();
+    let pass = (process.env.SMTP_PASS || "").trim();
+
+    // Sanitize quotes in case they were copy-pasted
+    while ((user.startsWith('"') && user.endsWith('"')) || (user.startsWith("'") && user.endsWith("'"))) {
+      user = user.slice(1, -1).trim();
+    }
+    while ((pass.startsWith('"') && pass.endsWith('"')) || (pass.startsWith("'") && pass.endsWith("'"))) {
+      pass = pass.slice(1, -1).trim();
+    }
 
     if (!user || !pass) {
       throw new Error("SMTP credentials (SMTP_USER, SMTP_PASS) are missing in environment variables");
     }
+
+    configuredUser = user;
 
     transporter = nodemailer.createTransport({
       host,
@@ -63,13 +75,24 @@ export async function sendAdminNotification(data: any) {
 
   try {
     await transporterInstance.sendMail({
-      from: `"ZopiqNow Portal" <${process.env.SMTP_USER}>`,
+      from: `"ZopiqNow Portal" <${configuredUser}>`,
       to: adminEmail,
       subject,
       html,
     });
   } catch (error: any) {
-    console.error("Failed to send admin notification email:", error?.message || error);
+    const errorMsg = error?.message || String(error);
+    if (errorMsg.includes("534-5.7.9") || errorMsg.includes("Please log in with your web browser")) {
+      console.error("\n[SMTP HELP] Gmail blocked the login attempt (Error 534-5.7.9). " +
+        "You cannot use your normal Gmail password. You must generate an 'App Password':\n" +
+        "  1. Go to Google Account Settings (https://myaccount.google.com/)\n" +
+        "  2. Enable '2-Step Verification'\n" +
+        "  3. Search for 'App passwords' (or go to https://myaccount.google.com/apppasswords)\n" +
+        "  4. Generate a new App Password (select App: 'Mail', Device: 'Other')\n" +
+        "  5. Use that 16-character password as your SMTP_PASS environment variable.\n"
+      );
+    }
+    console.error("Failed to send admin notification email:", errorMsg);
   }
 }
 
@@ -107,13 +130,24 @@ export async function sendCustomerAdminNotification(data: any) {
 
   try {
     await transporterInstance.sendMail({
-      from: `"ZopiqNow Portal" <${process.env.SMTP_USER}>`,
+      from: `"ZopiqNow Portal" <${configuredUser}>`,
       to: adminEmail,
       subject,
       html,
     });
   } catch (error: any) {
-    console.error("Failed to send customer admin notification email:", error?.message || error);
+    const errorMsg = error?.message || String(error);
+    if (errorMsg.includes("534-5.7.9") || errorMsg.includes("Please log in with your web browser")) {
+      console.error("\n[SMTP HELP] Gmail blocked the login attempt (Error 534-5.7.9). " +
+        "You cannot use your normal Gmail password. You must generate an 'App Password':\n" +
+        "  1. Go to Google Account Settings (https://myaccount.google.com/)\n" +
+        "  2. Enable '2-Step Verification'\n" +
+        "  3. Search for 'App passwords' (or go to https://myaccount.google.com/apppasswords)\n" +
+        "  4. Generate a new App Password (select App: 'Mail', Device: 'Other')\n" +
+        "  5. Use that 16-character password as your SMTP_PASS environment variable.\n"
+      );
+    }
+    console.error("Failed to send customer admin notification email:", errorMsg);
   }
 }
 

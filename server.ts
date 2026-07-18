@@ -89,10 +89,8 @@ app.post("/api/register", rateLimiter, async (req, res) => {
 
     // 1. Store in Google Sheets
     const sheetId = process.env.GOOGLE_SHEET_ID;
-    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-    if (sheetId && clientEmail && privateKey) {
+    if (sheetId) {
       try {
         await appendToSheet(sheetId, "Restaurants!A:F", [
           [
@@ -110,11 +108,7 @@ app.post("/api/register", rateLimiter, async (req, res) => {
         sheetsError = err?.message || String(err);
       }
     } else {
-      const missing = [];
-      if (!sheetId) missing.push("GOOGLE_SHEET_ID");
-      if (!clientEmail) missing.push("GOOGLE_CLIENT_EMAIL");
-      if (!privateKey) missing.push("GOOGLE_PRIVATE_KEY");
-      sheetsError = `Missing environment variables: ${missing.join(", ")}`;
+      sheetsError = "Missing GOOGLE_SHEET_ID in environment variables";
       console.warn("Google Sheets saving skipped. " + sheetsError);
     }
 
@@ -192,10 +186,8 @@ app.post("/api/register-customer", rateLimiter, async (req, res) => {
 
     // 1. Store in Google Sheets under Customers sheet
     const sheetId = process.env.GOOGLE_SHEET_ID;
-    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-    if (sheetId && clientEmail && privateKey) {
+    if (sheetId) {
       try {
         await appendToSheet(sheetId, "Customers!A:E", [
           [
@@ -212,11 +204,7 @@ app.post("/api/register-customer", rateLimiter, async (req, res) => {
         sheetsError = err?.message || String(err);
       }
     } else {
-      const missing = [];
-      if (!sheetId) missing.push("GOOGLE_SHEET_ID");
-      if (!clientEmail) missing.push("GOOGLE_CLIENT_EMAIL");
-      if (!privateKey) missing.push("GOOGLE_PRIVATE_KEY");
-      sheetsError = `Missing environment variables: ${missing.join(", ")}`;
+      sheetsError = "Missing GOOGLE_SHEET_ID in environment variables";
       console.warn("Google Sheets saving skipped for customer. " + sheetsError);
     }
 

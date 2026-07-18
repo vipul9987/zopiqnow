@@ -1,31 +1,98 @@
 import { google } from "googleapis";
+import fs from "fs";
+import path from "path";
 
 let sheetsClient: any = null;
 
 export function getSheetsClient() {
   if (!sheetsClient) {
-    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    let finalClientEmail = "";
+    let finalPrivateKey = "";
 
-    if (!clientEmail || !privateKey) {
+    // 1. Check if google-service-account.json exists in root directory
+    const saPath = path.join(process.cwd(), "google-service-account.json");
+    if (fs.existsSync(saPath)) {
+      try {
+        const saContent = fs.readFileSync(saPath, "utf8");
+        const saData = JSON.parse(saContent);
+        if (saData.client_email && saData.private_key) {
+          finalClientEmail = saData.client_email;
+          finalPrivateKey = saData.private_key;
+        }
+      } catch (err: any) {
+        console.error("Error loading service account from google-service-account.json:", err?.message || err);
+      }
+    }
+
+    // 2. If not loaded, fall back to environment variables
+    if (!finalClientEmail || !finalPrivateKey) {
+      const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+      const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+
+      if (!clientEmail || !privateKey) {
+        throw new Error(
+          "Google Sheets credentials are missing. Please define GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY in your Environment Variables (Settings) or make sure google-service-account.json exists."
+        );
+      }
+
+      // Helper to safely parse JSON if an env var contains the whole service account json file
+      const tryParseJson = (str: string) => {
+        try {
+          const trimmed = str.trim();
+          if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+            return JSON.parse(trimmed);
+          }
+        } catch (e) {
+          // Not valid JSON
+        }
+        return null;
+      };
+
+      const jsonEmail = tryParseJson(clientEmail);
+      const jsonKey = tryParseJson(privateKey);
+
+      if (jsonEmail && jsonEmail.client_email && jsonEmail.private_key) {
+        finalClientEmail = jsonEmail.client_email;
+        finalPrivateKey = jsonEmail.private_key;
+      } else if (jsonKey && jsonKey.client_email && jsonKey.private_key) {
+        finalClientEmail = jsonKey.client_email;
+        finalPrivateKey = jsonKey.private_key;
+      } else {
+        // Direct raw parsing with deep sanitization (stripping surrounding quotes)
+        let formattedClientEmail = clientEmail.trim();
+        while (
+          (formattedClientEmail.startsWith('"') && formattedClientEmail.endsWith('"')) ||
+          (formattedClientEmail.startsWith("'") && formattedClientEmail.endsWith("'"))
+        ) {
+          formattedClientEmail = formattedClientEmail.slice(1, -1).trim();
+        }
+
+        let formattedPrivateKey = privateKey.trim();
+        while (
+          (formattedPrivateKey.startsWith('"') && formattedPrivateKey.endsWith('"')) ||
+          (formattedPrivateKey.startsWith("'") && formattedPrivateKey.endsWith("'"))
+        ) {
+          formattedPrivateKey = formattedPrivateKey.slice(1, -1).trim();
+        }
+        formattedPrivateKey = formattedPrivateKey.replace(/\\n/g, "\n");
+
+        finalClientEmail = formattedClientEmail;
+        finalPrivateKey = formattedPrivateKey;
+      }
+    }
+
+    if (!finalClientEmail || !finalPrivateKey) {
       throw new Error(
-        "Google Sheets credentials are missing. Please define GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY in your Environment Variables (Settings)."
+        "Invalid Google Sheets credentials. Please check your GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY configuration."
       );
     }
 
-    // Clean up private key to handle common pasting mistakes (e.g. nested quotes)
-    let formattedPrivateKey = privateKey.trim();
-    while (
-      (formattedPrivateKey.startsWith('"') && formattedPrivateKey.endsWith('"')) ||
-      (formattedPrivateKey.startsWith("'") && formattedPrivateKey.endsWith("'"))
-    ) {
-      formattedPrivateKey = formattedPrivateKey.slice(1, -1).trim();
-    }
-    formattedPrivateKey = formattedPrivateKey.replace(/\\n/g, "\n");
+    // Sanitize private key newlines just in case they are formatted with literal \n characters
+    let sanitizedPrivateKey = finalPrivateKey.replace(/\\n/g, "\n");
 
     const auth = new google.auth.JWT({
-      email: clientEmail,
-      key: formattedPrivateKey,
+      email: finalClientEmail,
+      key: sanitizedPrivateKey,
       scopes: ["https://www.googleapis.com/auth/spreadsheets"]
     });
 
